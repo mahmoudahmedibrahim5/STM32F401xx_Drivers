@@ -8,10 +8,8 @@
 #ifndef RCC_RCC_REGISTERS_H_
 #define RCC_RCC_REGISTERS_H_
 
-#include "../../Utilities/stm32f401xx.h"
-
 typedef struct{
-	volatile uint32_t RC;
+	volatile uint32_t CR;
 	volatile uint32_t PLLCFGR;
 	volatile uint32_t CFGR;
 	volatile uint32_t CIR;

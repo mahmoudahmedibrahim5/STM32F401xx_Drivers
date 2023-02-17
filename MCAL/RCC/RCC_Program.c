@@ -5,8 +5,117 @@
  *      Author: Mahmoud Ahmed Ibrahim
  */
 
+#include "../../Utilities/stm32f401xx.h"
 #include "RCC_Registers.h"
 #include "RCC_Interface.h"
+#include "RCC_Config.h"
+
+void RCC_init()
+{
+#if HSI
+	RCC->CR |= (1<<0);
+	RCC->CFGR &= ~(11<<0);
+	RCC->CFGR |= (10<<0);
+#elif HSE
+	RCC->CR |= (1<<16);
+	RCC->CFGR &= ~(11<<0);
+	RCC->CFGR |= (01<<0);
+#elif PLL
+	RCC->CR |= (1<<24);
+	RCC->CFGR &= ~(11<<0);
+	RCC->CFGR |= (10<<0);
+#endif
+	/* AHB Prescaler */
+	if(AHB_PRESCALER == 1){
+		RCC->CFGR &= ~(1<<7);
+	}
+	else{
+		RCC->CFGR |= (1<<7);
+		RCC->CFGR &= ~(111<<4);
+		switch(AHB_PRESCALER)
+		{
+		case 2:
+			RCC->CFGR |= (000<<4);
+			break;
+		case 4:
+			RCC->CFGR |= (001<<4);
+			break;
+		case 8:
+			RCC->CFGR |= (010<<4);
+			break;
+		case 16:
+			RCC->CFGR |= (011<<4);
+			break;
+		case 64:
+			RCC->CFGR |= (100<<4);
+			break;
+		case 128:
+			RCC->CFGR |= (101<<4);
+			break;
+		case 256:
+			RCC->CFGR |= (110<<4);
+			break;
+		case 512:
+			RCC->CFGR |= (111<<4);
+			break;
+		default:
+			// error
+			break;
+		}
+	}
+	/* APB1 Prescaler */
+	if(APB1_PRESCALER == 1){
+			RCC->CFGR &= ~(1<<12);
+	}
+	else{
+		RCC->CFGR |= (1<<12);
+		RCC->CFGR &= ~(11<<10);
+		switch(AHB_PRESCALER)
+		{
+		case 2:
+			RCC->CFGR |= (00<<10);
+			break;
+		case 4:
+			RCC->CFGR |= (01<<10);
+			break;
+		case 8:
+			RCC->CFGR |= (10<<10);
+			break;
+		case 16:
+			RCC->CFGR |= (11<<10);
+			break;
+		default:
+			//error
+			break;
+		}
+	}
+	/* APB2 Prescaler */
+	if(APB2_PRESCALER == 1){
+			RCC->CFGR &= ~(1<<15);
+	}
+	else{
+		RCC->CFGR |= (1<<15);
+		RCC->CFGR &= ~(11<<13);
+		switch(AHB_PRESCALER)
+		{
+		case 2:
+			RCC->CFGR |= (00<<13);
+			break;
+		case 4:
+			RCC->CFGR |= (01<<13);
+			break;
+		case 8:
+			RCC->CFGR |= (10<<13);
+			break;
+		case 16:
+			RCC->CFGR |= (11<<13);
+			break;
+		default:
+			//error
+			break;
+		}
+	}
+}
 
 void RCC_peripheralEn(En_peripheral_t per)
 {
@@ -342,4 +451,9 @@ void RCC_peripheralReset(En_peripheral_t per)
 		default:
 			break;
 	}
+}
+
+void RCC_softwareReset(void)
+{
+	// AIRCR
 }

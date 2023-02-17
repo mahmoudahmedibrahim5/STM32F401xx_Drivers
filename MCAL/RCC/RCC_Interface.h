@@ -8,7 +8,6 @@
 #ifndef RCC_RCC_INTERFACE_H_
 #define RCC_RCC_INTERFACE_H_
 
-#include "RCC_Registers.h"
 
 typedef enum {
 	// AHB1
@@ -50,8 +49,12 @@ typedef enum {
 	TIM11_EN
 }En_peripheral_t;
 
+void RCC_init();
+
 void RCC_peripheralEn(En_peripheral_t per);
 void RCC_peripheralLowPowerEn(En_peripheral_t per);
 void RCC_peripheralReset(En_peripheral_t per);
+
+void RCC_softwareReset(void);
 
 #endif /* RCC_RCC_INTERFACE_H_ */
