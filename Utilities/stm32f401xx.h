@@ -72,6 +72,24 @@
 #define PWR_BASE_ADDR 					(APB1_BASE_ADDR + 0x7000U)
 
 /////////////////////////// APB2 BUS /////////////////////////////
+#define TIM1_BASE_ADDR					(APB2_BASE_ADDR + 0x0000)
+#define TIM8_BASE_ADDR					(APB2_BASE_ADDR + 0x0400)
 
+#define USART1_BASE_ADDR				(APB2_BASE_ADDR + 0x1000)
+#define USART6_BASE_ADDR				(APB2_BASE_ADDR + 0x1400)
+
+#define ADC1_BASE_ADDR					(APB2_BASE_ADDR + 0x2000)
+#define SDIO_BASE_ADDR					(APB2_BASE_ADDR + 0x2C00)
+#define SPI1_BASE_ADDR					(APB2_BASE_ADDR + 0x3000)
+
+#define SPI4_BASE_ADDR					(APB2_BASE_ADDR + 0x3400)
+#define I2S4_BASE_ADDR					SPI4_BASE_ADDR
+
+#define SYSCFG_BASE_ADDR				(APB2_BASE_ADDR + 0x3800)
+#define EXTI_BASE_ADDR					(APB2_BASE_ADDR + 0x3C00)
+
+#define TIM9_BASE_ADDR					(APB2_BASE_ADDR + 0x4000)
+#define TIM10_BASE_ADDR					(APB2_BASE_ADDR + 0x4400)
+#define TIM11_BASE_ADDR					(APB2_BASE_ADDR + 0x4800)
 
 #endif /* INC_STM32F401XX_H_ */
