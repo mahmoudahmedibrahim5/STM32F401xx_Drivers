@@ -19,7 +19,7 @@ typedef enum{
 	PORTC,
 	PORTD,
 	PORTE,
-	PORTH
+	PORTH=7
 }En_Port_t;
 
 typedef struct{
