@@ -5,42 +5,19 @@
  *      Author: Mahmoud Ahmed Ibrahim
  */
 
-#include "../../Utilities/stm32f401xx.h"
 #include "NVIC_Interface.h"
-#include "NVIC_Registers.h"
 
-void NVIC_hardwareInterruptMask(EXTI_Config_t *p)
+void NVIC_enableIRQ(uint8_t IRQn)
 {
-	SYSCFG_EXTIcontrol(p->port, p->lineNum);
-	EXTI->IMR |= (1<<(p->lineNum));
-	if((p->triggerType) == RISING_EDGE || (p->triggerType) == RISING_AND_FALLING){
-		EXTI->RTSR |= (1<<(p->lineNum));
-	}
-	if((p->triggerType) == FALLING_EDGE){
-		EXTI->FTSR |= (1<<(p->lineNum));
-	}
+	// To know which register we will use, ex: ISER0, ISER1, ...
+	uint8_t index = IRQn/32;
+	NVIC_ISER[index] |= (uint32_t)(1<<(IRQn-32*index));
 }
 
-void NVIC_hardwareEventMask(EXTI_Config_t *p)
+void NVIC_disableIRQ(uint8_t IRQn)
 {
-	SYSCFG_EXTIcontrol(p->port, p->lineNum);
-	EXTI->EMR |= (1<<(p->lineNum));
-	if((p->triggerType) == RISING_EDGE || (p->triggerType) == RISING_AND_FALLING){
-		EXTI->RTSR |= (1<<(p->lineNum));
-	}
-	if((p->triggerType) == FALLING_EDGE){
-		EXTI->FTSR |= (1<<(p->lineNum));
-	}
+	// To know which register we will use, ex: ICER0, ICER1, ...
+	uint8_t index = IRQn/32;
+	NVIC_ICER[index] |= (uint32_t)(1<<(IRQn-32*index));
 }
 
-void NVIC_softwareInterruptMask(uint8_t lineNum)
-{
-	EXTI->IMR |=(1<<lineNum);
-	EXTI->SWIER |=(1<<lineNum);
-}
-
-void NVIC_softwareEventMask(uint8_t lineNum)
-{
-	EXTI->EMR |=(1<<lineNum);
-	EXTI->SWIER |=(1<<lineNum);
-}

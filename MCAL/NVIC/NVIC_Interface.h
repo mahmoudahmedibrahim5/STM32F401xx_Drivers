@@ -8,21 +8,14 @@
 #ifndef NVIC_NVIC_INTERFACE_H_
 #define NVIC_NVIC_INTERFACE_H_
 
-#include "../SYSCFG/SYSCFG_Interface.h"
+#include "../../Utilities/stm32f401xx.h"
+#include "NVIC_Registers.h"
 
-#define RISING_EDGE  		0
-#define FALLING_EDGE 		1
-#define RISING_AND_FALLING 	2
+void NVIC_enableIRQ(uint8_t IRQn);
+void NVIC_disableIRQ(uint8_t IRQn);
+void NVIC_setPendingIRQ(uint8_t IRQn);
+void NVIC_clearPendingIRQ(uint8_t IRQn);
+uint8_t NVIC_getPendingIRQ(uint8_t IRQn);
 
-typedef struct{
-	En_Port_t port;
-	uint8_t lineNum;
-	uint8_t triggerType;
-}EXTI_Config_t;
-
-void NVIC_hardwareInterruptMask(EXTI_Config_t *p);
-void NVIC_hardwareEventMask(EXTI_Config_t *p);
-void NVIC_softwareInterruptMask(uint8_t lineNum);
-void NVIC_softwareEventMask(uint8_t lineNum);
 
 #endif /* NVIC_NVIC_INTERFACE_H_ */
