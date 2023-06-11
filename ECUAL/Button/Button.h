@@ -14,6 +14,8 @@
 
 #include "../../Utilities/stm32f401xx.h"
 #include "../../MCAL/GPIO/GPIO_Interface.h"
+#include "../../MCAL/NVIC/NVIC_Interface.h"
+#include "../../MCAL/EXTI/EXTI_Interface.h"
 
 typedef struct Button{
 	uint8_t port;
@@ -22,5 +24,6 @@ typedef struct Button{
 
 void Button_init(Button_t* btn);
 uint8_t Button_read(Button_t* btn);
+void Button_setInterrupt(Button_t* btn, uint8_t triggerType);
 
 #endif /* BUTTON_BUTTON_H_ */
