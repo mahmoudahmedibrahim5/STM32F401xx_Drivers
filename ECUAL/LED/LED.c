@@ -27,3 +27,7 @@ void LED_turnOFF(LED_t* led){
 void LED_toggle(LED_t* led){
 	GPIO_togglePin(led->port, led->pin);
 }
+
+uint8_t LED_read(LED_t* led){
+	return GPIO_readPin(led->port, led->pin);
+}

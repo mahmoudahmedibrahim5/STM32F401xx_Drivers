@@ -25,5 +25,6 @@ void LED_init(LED_t* led);
 void LED_turnON(LED_t* led);
 void LED_turnOFF(LED_t* led);
 void LED_toggle(LED_t* led);
+uint8_t LED_read(LED_t* led);
 
 #endif /* LED_LED_H_ */
