@@ -107,10 +107,10 @@ void GPIO_initPin(En_Port_t port, uint8_t pinNum, GPIO_Config_t* mode)
 		}
 		// Configure Alternate function
 		if(mode->mode == ALT_FN){
-			if(mode->AltFuncMode<8)
+			if(pinNum<8)
 				pGPIO->AFRL |= (mode->AltFuncMode << (4*pinNum));
 			else
-				pGPIO->AFRH |= ((mode->AltFuncMode-8) << (4*pinNum));
+				pGPIO->AFRH |= ((mode->AltFuncMode) << (4*(pinNum-8)));
 		}
 }
 
