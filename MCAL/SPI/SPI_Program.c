@@ -87,17 +87,24 @@ void SPI_configurePins(st_SPI_RegDef_t* SPIn){
 
 	if(SPIn == SPI1){
 		spiConfig.AltFuncMode = AF5;
-		GPIO_initPin(PORTA, 4, &spiConfig);
-		GPIO_initPin(PORTA, 5, &spiConfig);
-		GPIO_initPin(PORTA, 6, &spiConfig);
-		GPIO_initPin(PORTA, 7, &spiConfig);
+		GPIO_initPin(PORTA, 4, &spiConfig); // NSS
+		GPIO_initPin(PORTA, 5, &spiConfig); // SCK
+		GPIO_initPin(PORTA, 6, &spiConfig); // MISO
+		GPIO_initPin(PORTA, 7, &spiConfig); // MOSI
 	}
 	else if(SPIn == SPI2){
 		spiConfig.AltFuncMode = AF5;
-		GPIO_initPin(PORTB, 12, &spiConfig);
-		GPIO_initPin(PORTB, 13, &spiConfig);
-		GPIO_initPin(PORTB, 14, &spiConfig);
-		GPIO_initPin(PORTB, 15, &spiConfig);
+		GPIO_initPin(PORTB, 12, &spiConfig); // NSS
+		GPIO_initPin(PORTB, 13, &spiConfig); // SCK
+		GPIO_initPin(PORTB, 14, &spiConfig); // MISO
+		GPIO_initPin(PORTB, 15, &spiConfig); // MOSI
+	}
+	else if(SPIn == SPI3){
+		spiConfig.AltFuncMode = AF6;
+		GPIO_initPin(PORTA, 15, &spiConfig); // NSS
+		GPIO_initPin(PORTB, 3, &spiConfig);  // SCK
+		GPIO_initPin(PORTB, 4, &spiConfig);  // MISO
+		GPIO_initPin(PORTB, 5, &spiConfig);  // MOSI
 	}
 }
 
