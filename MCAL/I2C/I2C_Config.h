@@ -16,6 +16,7 @@
 typedef struct{
 	uint8_t speedMode;
 	uint8_t addressSize;
+	uint8_t speed;
 	uint16_t address;
 	uint8_t ACK;
 }I2C_Config_t;

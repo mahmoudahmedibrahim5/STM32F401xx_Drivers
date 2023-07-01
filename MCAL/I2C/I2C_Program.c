@@ -10,48 +10,56 @@
 void I2C_init(st_I2C_RegDef_t* I2Cn, I2C_Config_t* config){
 	I2C_configurePins(I2Cn);
 
-	/* Clock and speed Configuration */
-	I2Cn->CR2 |= FREQ;
-	if(config->speedMode == STANDARD){
-		I2Cn->CCR &= ~(1<<15);
-		I2Cn->CCR |= FREQ * (T_SCL/2);
-	}
-	else if(config->speedMode == FAST){
-		I2Cn->CCR |= (1<<15);
-	}
-	I2Cn->TRISE |= (FREQ + 1);
+	/* ACK Control */
+	if(config->ACK == ACK_EN)
+		I2Cn->CR1 |= (1<<10);
+	else
+		I2Cn->CR1 &= ~(1<<10);
+
+	/* Clock Configuration */
+	I2Cn->CR2 |= (FREQ & 0x3F);
 
 	/* Configure Address */
 	if(config->addressSize == _7_BIT){
-		I2Cn->OAR1 &= ~(1<<15);
-		I2Cn->OAR1 |= (1<<14);
 		// clear address
-		I2Cn->OAR1 &= ~(0b1111111<<1);
+		I2Cn->OAR1 &= 0x00;
+		// Set the 7 bit address mode
+		I2Cn->OAR1 &= ~(1<<15);
+		I2Cn->OAR1 |= (1<<14); // This bit should be high by software (Reference Manual)
 		// write the address
-		I2Cn->OAR1 |= (config->address<<1);
+		I2Cn->OAR1 |= ((config->address<<1) & 0x00FE);
+
 	}
 	else{
 		// 10 bit addressing mode
 	}
 
-	/* ACK Control */
-	if(config->ACK == ACK_EN){
-		I2Cn->CR1 |= (1<<10);
+	/* Speed Configuration */
+	if(config->speedMode == STANDARD){
+		//I2Cn->CCR = ((FREQ * (T_SCL/2)) & 0xFFF);
+		I2Cn->CCR = ((FREQ * ((1000U/config->speed)/2)) & 0xFFF);
 	}
-	else{
-		I2Cn->CR1 &= ~(1<<10);
+	else if(config->speedMode == FAST){
+		// Fast mode
 	}
+	I2Cn->TRISE |= ((FREQ + 1) & 0x3F);
 
+	// Peripheral Enable
 	I2Cn->CR1 |= (1<<I2C_PE);
 }
 
 void I2C_masterSendData(st_I2C_RegDef_t* I2Cn, uint8_t address, uint8_t* data, uint32_t len){
+	uint8_t slaveAddress;
+
 	// Send Start bit
 	I2Cn->CR1 |= (1<<I2C_START);
 
 	// Send the address
 	while(!(I2Cn->SR1 & (1<<I2C_SB_FLAG)));
-	I2Cn->DR = address;
+	slaveAddress = address<<1;
+	slaveAddress &= ~(1); // Clear LSB to enter Transmission mode
+	I2Cn->DR = slaveAddress;
+
 	// Wait for address to be sent
 	while(!(I2Cn->SR1 & (1<<I2C_ADDR_FLAG)));
 	uint8_t readSR2 = I2Cn->SR2; // Clear ADDR flag
@@ -64,37 +72,44 @@ void I2C_masterSendData(st_I2C_RegDef_t* I2Cn, uint8_t address, uint8_t* data, u
 	}
 
 	// Send Stop bit
-	while( (!(I2Cn->SR1 & (1<<I2C_TXE_FLAG))) );// || (!(I2Cn->SR1 & (1<<2))) );
+	while( (!(I2Cn->SR1 & (1<<I2C_TXE_FLAG))) );
 	I2Cn->CR1 |= (1<<I2C_STOP);
 }
 
 void I2C_masterReceiveData(st_I2C_RegDef_t* I2Cn,  uint8_t address, uint8_t* data, uint32_t len){
 	uint32_t i=0;
+	uint8_t slaveAddress;
+
 	// Send Start bit
 	I2Cn->CR1 |= (1<<I2C_START);
 
 	// Send the address
 	while(!(I2Cn->SR1 & (1<<I2C_SB_FLAG)));
-	I2Cn->DR = address;
+	slaveAddress = address<<1;
+	slaveAddress |= (1); // Set LSB to enter Receiving mode
+	I2Cn->DR = slaveAddress;
+
 	// Wait for address to be sent
 	while(!(I2Cn->SR1 & (1<<I2C_ADDR_FLAG)));
-	if(len==1) // Send Stop bit in case 1 Byte
+	if(len==1){ // Send Stop bit in case 1 Byte
+		I2Cn->CR1 &= ~(1<<10); // Disable the ACK
 		I2Cn->CR1 |= (1<<I2C_STOP);
-
+	}
 	uint8_t readSR2 = I2Cn->SR2; // Clear ADDR flag
 	(void)readSR2;
 
 	// Receive the data
-	for(i=0; i<len-1; i++){
+	for(i=0; i<len; i++){
 		while(!(I2Cn->SR1 & (1<<I2C_RXNE_FLAG)));
+		if(i == len-2){// Send Stop bit in case more than 1 Byte
+			I2Cn->CR1 &= ~(1<<10); // Disable the ACK
+			I2Cn->CR1 |= (1<<I2C_STOP);
+		}
 		data[i] = I2Cn->DR;
 	}
 
-	// Send Stop bit in case more than 1 Byte
-	if(len != 1)
-		I2Cn->CR1 |= (1<<I2C_STOP);
-	while(!(I2Cn->SR1 & (1<<I2C_RXNE_FLAG)));
-	data[i] = I2Cn->DR;
+	// ReEnable ACK
+	I2Cn->CR1 |= (1<<10);
 }
 
 void I2C_slaveSendData(st_I2C_RegDef_t* I2Cn, uint8_t* data, uint32_t len){
@@ -132,12 +147,11 @@ void I2C_slaveReceiveData(st_I2C_RegDef_t* I2Cn, uint8_t* data, uint32_t len){
 	(void)readCR1;
 }
 
-
 void I2C_configurePins(st_I2C_RegDef_t* I2Cn){
 	GPIO_Config_t I2C_config;
 	I2C_config.mode = ALT_FN;
 	I2C_config.outType = OPEN_DRAIN;
-	I2C_config.pupdState = PULL_UP;
+	I2C_config.pupdState = NO_PUPD;
 	I2C_config.speed = HIGH_SPEED;
 
 	if(I2Cn == I2C1){
