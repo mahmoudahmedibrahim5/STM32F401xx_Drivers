@@ -10,26 +10,26 @@
 
 void GPIO_initPort(En_Port_t port, GPIO_Config_t* mode)
 {
-	st_GPIO_RegDef_t *pGPIO;
+	st_GPIO_RegDef_t *GPIOn;
 	switch(port)
 	{
 	case PORTA:
-			pGPIO = pGPIOA;
+			GPIOn = GPIOA;
 			break;
 	case PORTB:
-			pGPIO = pGPIOB;
+			GPIOn = GPIOB;
 			break;
 	case PORTC:
-			pGPIO = pGPIOC;
+			GPIOn = GPIOC;
 			break;
 	case PORTD:
-			pGPIO = pGPIOD;
+			GPIOn = GPIOD;
 			break;
 	case PORTE:
-			pGPIO = pGPIOE;
+			GPIOn = GPIOE;
 			break;
 	case PORTH:
-			pGPIO = pGPIOH;
+			GPIOn = GPIOH;
 			break;
 	default:
 			// error (will be edited later)
@@ -38,104 +38,109 @@ void GPIO_initPort(En_Port_t port, GPIO_Config_t* mode)
 	for(uint8_t i=0; i<16; i++)
 	{
 		// Configure the mode
-		pGPIO->MODE  &= ~(0x3<<((2*i)));
-		pGPIO->MODE  |= (mode->mode << (2*i));
+		GPIOn->MODER  &= ~(0x3<<((2*i)));
+		GPIOn->MODER  |= (mode->mode << (2*i));
+
 		// Configure output type in case mode is output
-		if(mode->mode == OUT){
-		pGPIO->TYPE  &= ~(1<<(i));
-		pGPIO->TYPE  |= (mode->outType << i);
+		if(mode->mode == OUT || mode->mode == ALT_FN){
+		GPIOn->OTYPER  &= ~(1<<(i));
+		GPIOn->OTYPER  |= (mode->outType << i);
 		}
+
 		// Configure speed
-		pGPIO->SPEED &= ~(0x3<<((2*i)));
-		pGPIO->SPEED |= (mode->speed << (2*i));
+		GPIOn->OSPEEDR &= ~(0x3<<((2*i)));
+		GPIOn->OSPEEDR |= (mode->speed << (2*i));
+
 		// Configure pull up and pull down resistors in case mode is input or open drain output
-		if((mode->mode == IN) || ((mode->mode == OUT)&&(mode->outType == OPEN_DRAIN))){
-		pGPIO->PUPDR &= ~(0x3<<((2*i)));
-		pGPIO->PUPDR |= (mode->pupdState << (2*i));
-		}
+		GPIOn->PUPDR &= ~(0x3<<((2*i)));
+		GPIOn->PUPDR |= (mode->pupdState << (2*i));
+
 		// Configure Alternate function
 		if(mode->mode == ALT_FN){
 			if(mode->AltFuncMode<8)
-				pGPIO->AFRL |= (mode->AltFuncMode << (4*i));
+				GPIOn->AFRL |= (mode->AltFuncMode << (4*i));
 			else
-				pGPIO->AFRH |= ((mode->AltFuncMode-8) << (4*i));
+				GPIOn->AFRH |= ((mode->AltFuncMode-8) << (4*i));
 		}
 	}
 }
 void GPIO_initPin(En_Port_t port, uint8_t pinNum, GPIO_Config_t* mode)
 {
-		st_GPIO_RegDef_t *pGPIO;
+		st_GPIO_RegDef_t *GPIOn;
 		switch(port)
 		{
 		case PORTA:
-				pGPIO = pGPIOA;
+				GPIOn = GPIOA;
 				break;
 		case PORTB:
-				pGPIO = pGPIOB;
+				GPIOn = GPIOB;
 				break;
 		case PORTC:
-				pGPIO = pGPIOC;
+				GPIOn = GPIOC;
 				break;
 		case PORTD:
-				pGPIO = pGPIOD;
+				GPIOn = GPIOD;
 				break;
 		case PORTE:
-				pGPIO = pGPIOE;
+				GPIOn = GPIOE;
 				break;
 		case PORTH:
-				pGPIO = pGPIOH;
+				GPIOn = GPIOH;
 				break;
 		default:
 				// error (will be edited later)
 				break;
 		}
+
 		// Configure the mode
-		pGPIO->MODE  &= ~(0x3<<((2*pinNum)));
-		pGPIO->MODE  |= (mode->mode << (2*pinNum));
+		GPIOn->MODER  &= ~(0x3<<((2*pinNum)));
+		GPIOn->MODER  |= (mode->mode << (2*pinNum));
+
 		// Configure output type in case mode is output
-		if(mode->mode == OUT){
-		pGPIO->TYPE  &= ~(1<<(pinNum));
-		pGPIO->TYPE  |= (mode->outType << pinNum);
+		if(mode->mode == OUT || mode->mode == ALT_FN){
+		GPIOn->OTYPER  &= ~(1<<(pinNum));
+		GPIOn->OTYPER  |= (mode->outType << pinNum);
 		}
+
 		// Configure speed
-		pGPIO->SPEED &= ~(0x3<<((2*pinNum)));
-		pGPIO->SPEED |= (mode->speed << (2*pinNum));
+		GPIOn->OSPEEDR &= ~(0x3<<((2*pinNum)));
+		GPIOn->OSPEEDR |= (mode->speed << (2*pinNum));
+
 		// Configure pull up and pull down resistors in case mode is input or open drain output
-		if((mode->mode == IN) || ((mode->mode == OUT)&&(mode->outType == OPEN_DRAIN))){
-		pGPIO->PUPDR &= ~(0x3<<((2*pinNum)));
-		pGPIO->PUPDR |= (mode->pupdState << (2*pinNum));
-		}
+		GPIOn->PUPDR &= ~(0x3<<((2*pinNum)));
+		GPIOn->PUPDR |= (mode->pupdState << (2*pinNum));
+
 		// Configure Alternate function
 		if(mode->mode == ALT_FN){
 			if(pinNum<8)
-				pGPIO->AFRL |= (mode->AltFuncMode << (4*pinNum));
+				GPIOn->AFRL |= (mode->AltFuncMode << (4*pinNum));
 			else
-				pGPIO->AFRH |= ((mode->AltFuncMode) << (4*(pinNum-8)));
+				GPIOn->AFRH |= ((mode->AltFuncMode) << (4*(pinNum-8)));
 		}
 }
 
 void GPIO_setPinValue(En_Port_t port, uint8_t pinNum, uint8_t val)
 {
-	st_GPIO_RegDef_t *pGPIO;
+	st_GPIO_RegDef_t *GPIOn;
 		switch(port)
 		{
 		case PORTA:
-				pGPIO = pGPIOA;
+				GPIOn = GPIOA;
 				break;
 		case PORTB:
-				pGPIO = pGPIOB;
+				GPIOn = GPIOB;
 				break;
 		case PORTC:
-				pGPIO = pGPIOC;
+				GPIOn = GPIOC;
 				break;
 		case PORTD:
-				pGPIO = pGPIOD;
+				GPIOn = GPIOD;
 				break;
 		case PORTE:
-				pGPIO = pGPIOE;
+				GPIOn = GPIOE;
 				break;
 		case PORTH:
-				pGPIO = pGPIOH;
+				GPIOn = GPIOH;
 				break;
 		default:
 				// error
@@ -143,158 +148,158 @@ void GPIO_setPinValue(En_Port_t port, uint8_t pinNum, uint8_t val)
 		}
 	if(val == HIGH)
 	{
-		pGPIO->ODR |= (1<<pinNum);
+		GPIOn->ODR |= (1<<pinNum);
 	}
 	else
 	{
-		pGPIO->ODR &= ~(1<<pinNum);
+		GPIOn->ODR &= ~(1<<pinNum);
 	}
 }
 void GPIO_setPortValue(En_Port_t port, uint16_t val)
 {
-	st_GPIO_RegDef_t *pGPIO;
+	st_GPIO_RegDef_t *GPIOn;
 		switch(port)
 		{
 		case PORTA:
-				pGPIO = pGPIOA;
+				GPIOn = GPIOA;
 				break;
 		case PORTB:
-				pGPIO = pGPIOB;
+				GPIOn = GPIOB;
 				break;
 		case PORTC:
-				pGPIO = pGPIOC;
+				GPIOn = GPIOC;
 				break;
 		case PORTD:
-				pGPIO = pGPIOD;
+				GPIOn = GPIOD;
 				break;
 		case PORTE:
-				pGPIO = pGPIOE;
+				GPIOn = GPIOE;
 				break;
 		case PORTH:
-				pGPIO = pGPIOH;
+				GPIOn = GPIOH;
 				break;
 		default:
 				// error
 				break;
 		}
 
-		pGPIO->ODR = val;
+		GPIOn->ODR = val;
 }
 
 void GPIO_togglePin(En_Port_t port, uint8_t pinNum)
 {
-	st_GPIO_RegDef_t *pGPIO;
+	st_GPIO_RegDef_t *GPIOn;
 		switch(port)
 		{
 		case PORTA:
-				pGPIO = pGPIOA;
+				GPIOn = GPIOA;
 				break;
 		case PORTB:
-				pGPIO = pGPIOB;
+				GPIOn = GPIOB;
 				break;
 		case PORTC:
-				pGPIO = pGPIOC;
+				GPIOn = GPIOC;
 				break;
 		case PORTD:
-				pGPIO = pGPIOD;
+				GPIOn = GPIOD;
 				break;
 		case PORTE:
-				pGPIO = pGPIOE;
+				GPIOn = GPIOE;
 				break;
 		case PORTH:
-				pGPIO = pGPIOH;
+				GPIOn = GPIOH;
 				break;
 		default:
 				// error
 				break;
 		}
-	pGPIO->ODR ^= (1<<pinNum);
+	GPIOn->ODR ^= (1<<pinNum);
 }
 void GPIO_togglePort(En_Port_t port)
 {
-	st_GPIO_RegDef_t *pGPIO;
+	st_GPIO_RegDef_t *GPIOn;
 		switch(port)
 		{
 		case PORTA:
-				pGPIO = pGPIOA;
+				GPIOn = GPIOA;
 				break;
 		case PORTB:
-				pGPIO = pGPIOB;
+				GPIOn = GPIOB;
 				break;
 		case PORTC:
-				pGPIO = pGPIOC;
+				GPIOn = GPIOC;
 				break;
 		case PORTD:
-				pGPIO = pGPIOD;
+				GPIOn = GPIOD;
 				break;
 		case PORTE:
-				pGPIO = pGPIOE;
+				GPIOn = GPIOE;
 				break;
 		case PORTH:
-				pGPIO = pGPIOH;
+				GPIOn = GPIOH;
 				break;
 		default:
 				// error
 				break;
 		}
-	pGPIO->ODR ^= 0xFFFF;
+	GPIOn->ODR ^= 0xFFFF;
 }
 
 uint8_t GPIO_readPin(En_Port_t port, uint8_t pinNum)
 {
-	st_GPIO_RegDef_t *pGPIO;
+	st_GPIO_RegDef_t *GPIOn;
 			switch(port)
 			{
 			case PORTA:
-					pGPIO = pGPIOA;
+					GPIOn = GPIOA;
 					break;
 			case PORTB:
-					pGPIO = pGPIOB;
+					GPIOn = GPIOB;
 					break;
 			case PORTC:
-					pGPIO = pGPIOC;
+					GPIOn = GPIOC;
 					break;
 			case PORTD:
-					pGPIO = pGPIOD;
+					GPIOn = GPIOD;
 					break;
 			case PORTE:
-					pGPIO = pGPIOE;
+					GPIOn = GPIOE;
 					break;
 			case PORTH:
-					pGPIO = pGPIOH;
+					GPIOn = GPIOH;
 					break;
 			default:
 					// error
 					break;
 			}
-	return (uint8_t)((pGPIO->IDR & (1<<pinNum))>>pinNum);
+	return (uint8_t)((GPIOn->IDR & (1<<pinNum))>>pinNum);
 }
 uint16_t GPIO_readPort(En_Port_t port)
 {
-	st_GPIO_RegDef_t *pGPIO;
+	st_GPIO_RegDef_t *GPIOn;
 				switch(port)
 				{
 				case PORTA:
-						pGPIO = pGPIOA;
+						GPIOn = GPIOA;
 						break;
 				case PORTB:
-						pGPIO = pGPIOB;
+						GPIOn = GPIOB;
 						break;
 				case PORTC:
-						pGPIO = pGPIOC;
+						GPIOn = GPIOC;
 						break;
 				case PORTD:
-						pGPIO = pGPIOD;
+						GPIOn = GPIOD;
 						break;
 				case PORTE:
-						pGPIO = pGPIOE;
+						GPIOn = GPIOE;
 						break;
 				case PORTH:
-						pGPIO = pGPIOH;
+						GPIOn = GPIOH;
 						break;
 				default:
 						// error
 						break;
 				}
-	return (uint16_t)(pGPIO->IDR);
+	return (uint16_t)(GPIOn->IDR);
 }
