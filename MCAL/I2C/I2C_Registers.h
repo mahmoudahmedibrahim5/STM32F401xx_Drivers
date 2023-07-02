@@ -28,18 +28,29 @@ typedef struct{
 #define I2C3	((st_I2C_RegDef_t *)I2C3_BASE_ADDR)
 
 /* CR1 Register Bits */
-#define I2C_PE		0
-#define I2C_START	8
-#define I2C_STOP	9
-#define I2C_ACK		10
+#define I2C_PE			0
+#define I2C_START		8
+#define I2C_STOP		9
+#define I2C_ACK			10
+
+/* CR2 Registers Bits */
+#define	I2C_ITERREN			8
+#define	I2C_ITEVTEN			9
+#define	I2C_ITBUFEN			10
 
 /* SR1 Register Flags */
-#define I2C_SB_FLAG		0
-#define I2C_ADDR_FLAG	1
-#define	I2C_BTF_FLAG	2
-#define I2C_STOPF_FLAG	4
-#define I2C_RXNE_FLAG	6
-#define I2C_TXE_FLAG	7
-#define I2C_AF_FLAG		10
+#define I2C_FLAG_SB			0
+#define I2C_FLAG_ADDR		1
+#define	I2C_FLAG_BTF		2
+#define I2C_FLAG_STOPF		4
+#define I2C_FLAG_RXNE		6
+#define I2C_FLAG_TXE		7
+#define I2C_FLAG_AF			10
+// Error Flags
+#define I2C_FLAG_BERR		8
+#define I2C_FLAG_ARLO		9
+#define I2C_FLAG_OVR		11
+#define I2C_FLAG_PECERR		12
+#define I2C_FLAG_TIMEOUT	14
 
 #endif /* I2C_I2C_REGISTERS_H_ */
