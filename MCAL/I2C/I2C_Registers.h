@@ -45,10 +45,11 @@ typedef struct{
 #define I2C_FLAG_STOPF		4
 #define I2C_FLAG_RXNE		6
 #define I2C_FLAG_TXE		7
-#define I2C_FLAG_AF			10
+
 // Error Flags
 #define I2C_FLAG_BERR		8
 #define I2C_FLAG_ARLO		9
+#define I2C_FLAG_AF			10
 #define I2C_FLAG_OVR		11
 #define I2C_FLAG_PECERR		12
 #define I2C_FLAG_TIMEOUT	14

@@ -53,8 +53,9 @@ typedef struct{
 #define I2C_RUNNING			1
 #define I2C_ERROR_BERR		2
 #define I2C_ERROR_ARLO		3
-#define I2C_ERROR_OVR		4
-#define I2C_ERROR_PECERR	5
-#define I2C_ERROR_TIMEOUT	6
+#define I2C_ERROR_AF		4
+#define I2C_ERROR_OVR		5
+#define I2C_ERROR_PECERR	6
+#define I2C_ERROR_TIMEOUT	7
 
 #endif /* I2C_I2C_CONFIG_H_ */

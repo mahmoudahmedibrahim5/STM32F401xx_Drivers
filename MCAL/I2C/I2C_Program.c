@@ -42,7 +42,7 @@ void I2C_init(st_I2C_RegDef_t* I2Cn, I2C_Config_t* config){
 	else if(config->speedMode == I2C_FAST){
 		// Fast mode
 	}
-	I2Cn->TRISE |= ((I2C_FREQ + 1) & 0x3F);
+	I2Cn->TRISE = ((I2C_FREQ + 1) & 0x3F);
 
 	// Peripheral Enable
 	I2Cn->CR1 |= (1<<I2C_PE);
@@ -112,39 +112,12 @@ void I2C_masterReceiveData(st_I2C_RegDef_t* I2Cn,  uint8_t address, uint8_t* dat
 	I2Cn->CR1 |= (1<<10);
 }
 
-void I2C_slaveSendData(st_I2C_RegDef_t* I2Cn, uint8_t* data, uint32_t len){
-	// Wait for the master to start the communication
-	while(!(I2Cn->SR1 & (1<<I2C_FLAG_ADDR)));
-	uint8_t readSR2 = I2Cn->SR2; // Clear ADDR flag
-	(void)readSR2;
-
-	// Send the data
-	for(uint32_t i=0; i<len; i++){
-		while(!(I2Cn->SR1 & (1<<I2C_FLAG_TXE)));
-		I2Cn->DR = data[i];
-		if(I2Cn->SR1 & (1<<I2C_FLAG_AF))
-			break;
-	}
-	I2Cn->SR1 &= ~(1<<I2C_FLAG_AF); // Clear the AF flag
+void I2C_slaveSendData(st_I2C_RegDef_t* I2Cn, uint8_t data){
+	I2Cn->DR = data;
 }
 
-void I2C_slaveReceiveData(st_I2C_RegDef_t* I2Cn, uint8_t* data, uint32_t len){
-	// Wait for the master to start the communication
-	while(!(I2Cn->SR1 & (1<<I2C_FLAG_ADDR)));
-	uint8_t readSR2 = I2Cn->SR2; // Clear ADDR flag
-	(void)readSR2;
-
-	// Receive the data
-	for(uint32_t i=0; i<len-1; i++){
-		if(I2Cn->SR1 & (1<<I2C_FLAG_STOPF))
-				break;
-		while(!(I2Cn->SR1 & (1<<I2C_FLAG_RXNE)));
-		data[i] = I2Cn->DR;
-	}
-
-	uint32_t readCR1 = I2Cn->CR1;
-	I2Cn->CR1 = readCR1; // Clear STOPF flag
-	(void)readCR1;
+void I2C_slaveReceiveData(st_I2C_RegDef_t* I2Cn, uint8_t* data){
+	*data = I2Cn->DR;
 }
 
 void I2C_configurePins(st_I2C_RegDef_t* I2Cn){
@@ -217,9 +190,14 @@ void I2C_eventInterruptHandler(st_I2C_RegDef_t* I2Cn, I2C_HandleIT_t* handle){
 	// 2- ADDR
 	else if(SR1 & (1<<I2C_FLAG_ADDR))
 	{
-		if( (handle->TxOrRx == I2C_RX_MODE) && (handle->len == 1) )
-			I2Cn->CR1 &= ~(1<<10); // Disable the ACK
-		uint8_t readSR2 = I2Cn->SR2; // Clear ADDR flag
+		if( I2Cn->SR2 & (1<<0) )
+		{ // Master
+			if( (handle->TxOrRx == I2C_RX_MODE) && (handle->len == 1) )
+				I2Cn->CR1 &= ~(1<<10); // Disable the ACK
+		}
+
+		// Clear ADDR flag in case Master or Slave
+		uint8_t readSR2 = I2Cn->SR2;
 		(void)readSR2;
 	}
 
@@ -241,37 +219,55 @@ void I2C_eventInterruptHandler(st_I2C_RegDef_t* I2Cn, I2C_HandleIT_t* handle){
 	// 4- STOPF
 	else if(SR1 & (1<<I2C_FLAG_STOPF))
 	{
-
+		// Slave Mode
+		uint32_t readCR1 = I2Cn->CR1;
+		I2Cn->CR1 = readCR1; // Clear STOPF flag
+		(void)readCR1;
+		I2C_slaveHandleCallBackFunction(I2Cn, I2C_EVENT_RECEPTION_FINISHED);
 	}
 
 	// 5- RXNE
 	else if(SR1 & (1<<I2C_FLAG_RXNE))
 	{
-		if(handle->index == (handle->len-2))
-			I2Cn->CR1 &= ~(1<<10);		// Disable the ACK
+		if( (I2Cn->SR2 & (1<<0)) ) // Master
+		{
+			if(handle->index == (handle->len-2))
+				I2Cn->CR1 &= ~(1<<10);		// Disable the ACK
 
-		if((handle->index==handle->len-1) && (handle->repeatedStart == I2C_RS_DISABLE))
-			I2Cn->CR1 |= (1<<I2C_STOP);	// Generate Stop Bit
+			if((handle->index==handle->len-1) && (handle->repeatedStart == I2C_RS_DISABLE))
+				I2Cn->CR1 |= (1<<I2C_STOP);	// Generate Stop Bit
 
-		// Read the data
-		handle->data[handle->index] = I2Cn->DR;
-		handle->index++;
+			// Read the data
+			handle->data[handle->index] = I2Cn->DR;
+			handle->index++;
 
-		/* Notify Application Communication Ended */
-		// To be Done
-		if(handle->index == handle->len){
-			handle->runningState = I2C_FINISHED;
-			// ReEnable ACK
-			I2Cn->CR1 |= (1<<10);
+			/* Notify Application Communication Ended */
+			// To be Done
+			if(handle->index == handle->len){
+				handle->runningState = I2C_FINISHED;
+				// ReEnable ACK
+				I2Cn->CR1 |= (1<<10);
+			}
+		}
+		else// Slave
+		{
+			I2C_slaveHandleCallBackFunction(I2Cn, I2C_EVENT_RECEIVE_DATA);
 		}
 	}
 
 	// 6- TXE
 	else if(SR1 & (1<<I2C_FLAG_TXE))
 	{
-		if(handle->index < handle->len){
-			I2Cn->DR = handle->data[handle->index];
-			handle->index++;
+		if( (I2Cn->SR2 & (1<<0)) ) // Master
+		{
+			if(handle->index < handle->len){
+				I2Cn->DR = handle->data[handle->index];
+				handle->index++;
+			}
+		}
+		else // Slave
+		{
+			I2C_slaveHandleCallBackFunction(I2Cn, I2C_EVENT_REQUEST_DATA);
 		}
 	}
 }
@@ -291,19 +287,30 @@ void I2C_errorInterruptHandler(st_I2C_RegDef_t* I2Cn, I2C_HandleIT_t* handle){
 		I2Cn->SR1 &= ~(1<<I2C_FLAG_ARLO);
 		handle->runningState = I2C_ERROR_ARLO;
 	}
-	// 3- OVR
+	// 3- AF
+	else if(SR1 & (1<<I2C_FLAG_AF))
+	{
+		I2Cn->SR1 &= ~(1<<I2C_FLAG_AF);
+		if(I2Cn->SR2 & (1<<0)){
+			handle->runningState = I2C_ERROR_AF;
+		}
+		else{
+			I2C_slaveHandleCallBackFunction(I2Cn, I2C_EVENT_TRANSMISSION_FINISHED);
+		}
+	}
+	// 4- OVR
 	else if(SR1 & (1<<I2C_FLAG_OVR))
 	{
 		I2Cn->SR1 &= ~(1<<I2C_FLAG_OVR);
 		handle->runningState = I2C_ERROR_OVR;
 	}
-	// 4- PECERR
+	// 5- PECERR
 	else if(SR1 & (1<<I2C_FLAG_PECERR))
 	{
 		I2Cn->SR1 &= ~(1<<I2C_FLAG_PECERR);
 		handle->runningState = I2C_ERROR_PECERR;
 	}
-	// 5- TIMEOUT
+	// 6- TIMEOUT
 	else if(SR1 & (1<<I2C_FLAG_TIMEOUT))
 	{
 		I2Cn->SR1 &= ~(1<<I2C_FLAG_TIMEOUT);
