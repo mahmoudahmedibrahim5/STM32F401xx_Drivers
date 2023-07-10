@@ -21,5 +21,7 @@ typedef struct{
 	uint8_t slaveAddress;
 }INA219_t;
 
+#define INA219_SHUNT_RESISTANCE		100	// mΩ
+#define INA219_MAX_CURRENT			250 // mA
 
 #endif /* INA219_INA219_CONFIG_H_ */
