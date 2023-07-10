@@ -9,11 +9,11 @@
 
 void BT_init(BT_t* bt){
 	USART_Config_t BM;
-	BM.dataSize = _9_BIT;
+	BM.dataSize = _8_BIT;
 	BM.mode = ASYNCHRONOUS;
 	BM.overSampling = OVERSAMPLING16;
 	BM.transmission = TX_AND_RX;
-	BM.parityType = EVEN_PARITY;
+	BM.parityType = NO_PARITY;
 	BM.stopBits = _1_BIT;
 	BM.baudrate = bt->baudrate;
 
