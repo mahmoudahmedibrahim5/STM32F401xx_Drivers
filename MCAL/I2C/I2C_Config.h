@@ -8,6 +8,9 @@
 #ifndef I2C_I2C_CONFIG_H_
 #define I2C_I2C_CONFIG_H_
 
+#define I2C1_SCL_PIN	6	// Could be 6 or 8 (configure it as you like)
+#define I2C1_SDA_PIN	7	// Could be 7 or 9 (configure it as you like)
+
 // Write the frequency in MHz
 #define I2C_FREQ	16
 // Write the time in microseconds

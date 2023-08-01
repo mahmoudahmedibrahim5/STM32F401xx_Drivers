@@ -8,13 +8,14 @@
 #include "I2C_Interface.h"
 
 void I2C_init(st_I2C_RegDef_t* I2Cn, I2C_Config_t* config){
-	I2C_configurePins(I2Cn);
+	if(I2Cn == I2C1)
+		RCC_peripheralEn(I2C1_EN);
+	else if(I2Cn == I2C2)
+		RCC_peripheralEn(I2C2_EN);
+	else if(I2Cn == I2C3)
+		RCC_peripheralEn(I2C3_EN);
 
-	/* ACK Control */
-	if(config->ACK == I2C_ACK_EN)
-		I2Cn->CR1 |= (1<<10);
-	else
-		I2Cn->CR1 &= ~(1<<10);
+	I2C_configurePins(I2Cn);
 
 	/* Clock Configuration */
 	I2Cn->CR2 |= (I2C_FREQ & 0x3F);
@@ -46,6 +47,12 @@ void I2C_init(st_I2C_RegDef_t* I2Cn, I2C_Config_t* config){
 
 	// Peripheral Enable
 	I2Cn->CR1 |= (1<<I2C_PE);
+
+	/* ACK Control */
+	if(config->ACK == I2C_ACK_EN)
+		I2Cn->CR1 |= (1<<10);
+	else
+		I2Cn->CR1 &= ~(1<<10);
 }
 
 void I2C_masterSendData(st_I2C_RegDef_t* I2Cn, uint8_t address, uint8_t* data, uint32_t len, uint8_t repeatedStart){
@@ -129,8 +136,8 @@ void I2C_configurePins(st_I2C_RegDef_t* I2Cn){
 
 	if(I2Cn == I2C1){
 		I2C_config.AltFuncMode = AF4;
-		GPIO_initPin(PORTB, 6, &I2C_config); // SCL
-		GPIO_initPin(PORTB, 7, &I2C_config); // SDA
+		GPIO_initPin(PORTB, I2C1_SCL_PIN, &I2C_config); // SCL
+		GPIO_initPin(PORTB, I2C1_SDA_PIN, &I2C_config); // SDA
 	}
 	else if(I2Cn == I2C2){
 		I2C_config.AltFuncMode = AF4;
