@@ -24,6 +24,11 @@ typedef struct Button{
 
 void Button_init(Button_t* btn);
 uint8_t Button_read(Button_t* btn);
+
+/* If you use interrupt,
+ * you should call EXTI_clearFlag(lineNum) at the ISR
+ * It Clear the interrupt flag, line Number = pin Number
+ * */
 void Button_setInterrupt(Button_t* btn, uint8_t triggerType);
 
 #endif /* BUTTON_BUTTON_H_ */

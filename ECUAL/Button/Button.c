@@ -20,8 +20,13 @@ uint8_t Button_read(Button_t* btn){
 }
 
 void Button_setInterrupt(Button_t* btn, uint8_t triggerType){
-	// This works only for EXTI0, EXTI1, .... , EXTI4
-	NVIC_enableIRQ(btn->pin + 6);
+	if(btn->pin < 5)
+		NVIC_enableIRQ(btn->pin + NVIC_IRQ_EXTI0);
+	else if(btn->pin < 10)
+		NVIC_enableIRQ(NVIC_IRQ_EXTI9_5);
+	else if(btn->pin < 16)
+		NVIC_enableIRQ(NVIC_IRQ_EXTI15_10);
+
 	EXTI_Config_t button = {btn->port, btn->pin, triggerType};
 	EXTI_hardwareInterruptMask(&button);
 }
