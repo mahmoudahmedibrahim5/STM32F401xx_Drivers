@@ -22,7 +22,7 @@ typedef struct{
 	uint32_t r5[24];
 	volatile uint32_t IABR[8];
 	uint32_t r6[56];
-	volatile uint32_t IPR[60];
+	volatile uint8_t IPR[240];
 	uint32_t r7[580];
 	volatile uint32_t STIR;
 }st_NVIC_RegDef_t;

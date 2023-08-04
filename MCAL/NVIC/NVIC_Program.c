@@ -36,3 +36,13 @@ void NVIC_clearPendingIRQ(uint8_t IRQn)
 	NVIC->ICPR[index] |= (uint32_t)(1<<(IRQn%32));
 }
 
+
+void NVIC_setPriority(uint8_t IRQn, uint8_t priority)
+{
+	NVIC->IPR[IRQn] = (priority<<4);
+}
+
+uint8_t NVIC_getPriority(uint8_t IRQn)
+{
+	return (NVIC->IPR[IRQn]>>4);
+}
