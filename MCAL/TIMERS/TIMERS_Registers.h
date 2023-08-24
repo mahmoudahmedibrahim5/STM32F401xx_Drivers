@@ -22,7 +22,7 @@ typedef struct{
 	uint32_t CCMR2;
 	uint32_t CCER;
 	uint32_t CNT; 	// Counter Register
-	uint32_t PSC; 	// Prescaler Register
+	uint32_t PSC; 	// PreScaler Register
 	uint32_t ARR; 	// Auto-Reload Register
 	uint32_t r0;
 	uint32_t CCR1;
