@@ -7,59 +7,125 @@
 
 #include "EXTI_Interface.h"
 
-void EXTI_hardwareInterruptMask(EXTI_Config_t *p)
+void EXTI_voidHardwareInterruptEnable(EXTI_Config_t *config)
 {
 	// Enable SYSCFG clock
 	RCC_peripheralEn(SYSCFG_EN);
 	// Choose certain line for certain port
-	SYSCFG_EXTIcontrol(p->port, p->lineNum);
+	SYSCFG_EXTIcontrol(config->port, config->lineNum);
 	// Enable Interrupt mask
-	EXTI->IMR |= (1<<(p->lineNum));
+	EXTI->IMR |= (1<<(config->lineNum));
 
 	// Choose the trigger mode
-	if((p->triggerType) == EXTI_RISING_EDGE){
+	if((config->triggerType) == EXTI_RISING_EDGE){
 		// Enable Rising Edge trigger
-		EXTI->RTSR |= (1<<(p->lineNum));
-		EXTI->FTSR &= ~(1<<(p->lineNum));
+		EXTI->RTSR |= (1<<(config->lineNum));
+		EXTI->FTSR &= ~(1<<(config->lineNum));
 	}
-	if((p->triggerType) == EXTI_FALLING_EDGE){
+	if((config->triggerType) == EXTI_FALLING_EDGE){
 		// Enable Falling Edge trigger
-		EXTI->FTSR |= (1<<(p->lineNum));
-		EXTI->RTSR &= ~(1<<(p->lineNum));
+		EXTI->FTSR |= (1<<(config->lineNum));
+		EXTI->RTSR &= ~(1<<(config->lineNum));
 	}
-	if((p->triggerType) == EXTI_RISING_AND_FALLING){
+	if((config->triggerType) == EXTI_ON_CHANGE){
 		// Enable Rising Edge trigger
-		EXTI->RTSR |= (1<<(p->lineNum));
+		EXTI->RTSR |= (1<<(config->lineNum));
 		// Enable Falling Edge trigger
-		EXTI->FTSR |= (1<<(p->lineNum));
+		EXTI->FTSR |= (1<<(config->lineNum));
 	}
 }
 
-void EXTI_hardwareEventMask(EXTI_Config_t *p)
+void EXTI_voidHardwareEventEnable(EXTI_Config_t *config)
 {
-	SYSCFG_EXTIcontrol(p->port, p->lineNum);
-	EXTI->EMR |= (1<<(p->lineNum));
-	if((p->triggerType) == EXTI_RISING_EDGE || (p->triggerType) == EXTI_RISING_AND_FALLING){
-		EXTI->RTSR |= (1<<(p->lineNum));
+	SYSCFG_EXTIcontrol(config->port, config->lineNum);
+	EXTI->EMR |= (1<<(config->lineNum));
+
+	// Choose the trigger mode
+	if((config->triggerType) == EXTI_RISING_EDGE){
+		// Enable Rising Edge trigger
+		EXTI->RTSR |= (1<<(config->lineNum));
+		EXTI->FTSR &= ~(1<<(config->lineNum));
 	}
-	if((p->triggerType) == EXTI_FALLING_EDGE){
-		EXTI->FTSR |= (1<<(p->lineNum));
+	if((config->triggerType) == EXTI_FALLING_EDGE){
+		// Enable Falling Edge trigger
+		EXTI->FTSR |= (1<<(config->lineNum));
+		EXTI->RTSR &= ~(1<<(config->lineNum));
+	}
+	if((config->triggerType) == EXTI_ON_CHANGE){
+		// Enable Rising Edge trigger
+		EXTI->RTSR |= (1<<(config->lineNum));
+		// Enable Falling Edge trigger
+		EXTI->FTSR |= (1<<(config->lineNum));
 	}
 }
 
-void EXTI_softwareInterruptMask(uint8_t lineNum)
+void EXTI_voidSoftwareInterruptMask(u8 lineNum)
 {
 	EXTI->IMR |=(1<<lineNum);
 	EXTI->SWIER |=(1<<lineNum);
 }
 
-void EXTI_softwareEventMask(uint8_t lineNum)
+void EXTI_voidSoftwareEventMask(u8 lineNum)
 {
 	EXTI->EMR |=(1<<lineNum);
 	EXTI->SWIER |=(1<<lineNum);
 }
 
-void EXTI_clearFlag(uint8_t lineNum)
+void (*EXTI_CallBack_line[16])(void);
+
+void EXTI_voidSetCallBackFunction(u8 lineNum, void(*ptr)(void))
 {
-	EXTI->PR |=(1<<lineNum);
+	EXTI_CallBack_line[lineNum] = ptr;
+}
+
+void EXTI0_IRQHandler(void)
+{
+	EXTI_CallBack_line[0]();
+	EXTI->PR |= (1<<0);
+}
+
+void EXTI1_IRQHandler(void)
+{
+	EXTI_CallBack_line[1]();
+	EXTI->PR |= (1<<1);
+}
+
+void EXTI2_IRQHandler(void)
+{
+	EXTI_CallBack_line[2]();
+	EXTI->PR |= (1<<2);
+}
+
+void EXTI3_IRQHandler(void)
+{
+	EXTI_CallBack_line[3]();
+	EXTI->PR |= (1<<3);
+}
+
+void EXTI4_IRQHandler(void)
+{
+	EXTI_CallBack_line[4]();
+	EXTI->PR |= (1<<4);
+}
+
+void EXTI9_5_IRQHandler(void)
+{
+	u32 tempReg = EXTI->PR;
+	u8 i=5;
+	for(i=5; i<10; i++)
+		if((tempReg>>i)&1)
+			break;
+	EXTI_CallBack_line[i]();
+	EXTI->PR |= (1<<i);
+}
+
+void EXTI15_10_IRQHandler(void)
+{
+	u32 tempReg = EXTI->PR;
+	u8 i=10;
+	for(i=10; i<16; i++)
+		if((tempReg>>i)&1)
+			break;
+	EXTI_CallBack_line[i]();
+	EXTI->PR |= (1<<i);
 }

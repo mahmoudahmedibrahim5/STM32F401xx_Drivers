@@ -8,26 +8,26 @@
 #ifndef EXTI_EXTI_INTERFACE_H_
 #define EXTI_EXTI_INTERFACE_H_
 
-#include "../../Utilities/stm32f401xx.h"
+#include "../../Utilities/DataTypes.h"
 #include "../SYSCFG/SYSCFG_Interface.h"
 #include "EXTI_Registers.h"
 
 #define EXTI_RISING_EDGE  			0
 #define EXTI_FALLING_EDGE 			1
-#define EXTI_RISING_AND_FALLING 	2
+#define EXTI_ON_CHANGE			 	2
 
 typedef struct{
 	EN_Port_t port;
-	uint8_t lineNum;
-	uint8_t triggerType;
+	u8 lineNum;
+	u8 triggerType;
 }EXTI_Config_t;
 
-void EXTI_hardwareInterruptMask(EXTI_Config_t *p);
-void EXTI_hardwareEventMask(EXTI_Config_t *p);
-void EXTI_softwareInterruptMask(uint8_t lineNum);
-void EXTI_softwareEventMask(uint8_t lineNum);
+void EXTI_voidHardwareInterruptEnable(EXTI_Config_t *config);
 
-/* Clear the flag at the end of ISR, line Number = pin Number*/
-void EXTI_clearFlag(uint8_t lineNum);
+void EXTI_voidHardwareEventEnable(EXTI_Config_t *config);
+void EXTI_voidSoftwareInterruptMask(u8 lineNum);
+void EXTI_voidSoftwareEventMask(u8 lineNum);
+
+void EXTI_voidSetCallBackFunction(u8 lineNum, void(*ptr)(void));
 
 #endif /* EXTI_EXTI_INTERFACE_H_ */

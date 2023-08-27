@@ -9,7 +9,7 @@
 
 I2C_Config_t INA219_I2C_config = {I2C_STANDARD, I2C_7_BIT, 100, 0x61, I2C_ACK_EN};
 
-void INA219_init(INA219_t* config)
+void INA219_voidInit(INA219_t* config)
 {
 	// Initialize I2C
 	I2C_init(config->I2Cn, &INA219_I2C_config);
@@ -31,7 +31,7 @@ void INA219_init(INA219_t* config)
 }
 
 
-sint16_t INA219_readShuntVoltage(INA219_t* config)
+s16 INA219_s16ReadShuntVoltage(INA219_t* config)
 {
 	uint8_t data[2];
 	uint8_t address = INA219_REG_SHUNT_VOLTAGE;
@@ -46,7 +46,7 @@ sint16_t INA219_readShuntVoltage(INA219_t* config)
 	return regRead;
 }
 
-uint16_t INA219_readBusVoltage(INA219_t* config)
+u16 INA219_u16ReadBusVoltage(INA219_t* config)
 {
 	uint8_t data[2];
 	uint8_t address = INA219_REG_BUS_VOLTAGE;
@@ -62,7 +62,7 @@ uint16_t INA219_readBusVoltage(INA219_t* config)
 	return (4*(regRead>>3));
 }
 
-sint16_t INA219_readCurrent(INA219_t* config)
+s16 INA219_s16ReadCurrent(INA219_t* config)
 {
 	uint8_t data[2];
 	uint8_t address = INA219_REG_CURRENT;
@@ -77,7 +77,7 @@ sint16_t INA219_readCurrent(INA219_t* config)
 	return regRead * ((INA219_MAX_CURRENT*1000)/32768);
 }
 
-uint16_t INA219_readPower(INA219_t* config)
+u16 INA219_u16ReadPower(INA219_t* config)
 {
 	uint8_t data[2];
 	uint8_t address = INA219_REG_POWER;

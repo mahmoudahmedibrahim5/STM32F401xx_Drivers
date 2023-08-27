@@ -13,11 +13,11 @@
 #define NO_KEY_PRESSED 10
 
 typedef struct{
-	En_Port_t port;
-	uint8_t pins[8]; // pins in order from left to right
+	EN_Port_t port;
+	u8 pins[8]; // pins in order from left to right
 }KeyPad_t;
 
-uint8_t KEYPAD_read(KeyPad_t* KeyPad);
+u8 KEYPAD_u8Read(KeyPad_t* KeyPad);
 
 #endif /* KEYPAD_H_ */
 

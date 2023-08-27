@@ -9,11 +9,11 @@
 #define LCD_LCD_CONFIG_H_
 
 typedef struct{
-	uint8_t mode;
-	uint8_t lines;
-	uint8_t resolution;
-	uint8_t	cursor;
-	uint8_t direction;
+	u8 mode;
+	u8 lines;
+	u8 resolution;
+	u8	cursor;
+	u8 direction;
 }LCD_Config_t;
 
 /* Modes */

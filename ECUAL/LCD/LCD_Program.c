@@ -7,36 +7,36 @@
 
 #include "LCD_Interface.h"
 
-LCD_Config_t defaultConfig = {LCD_MODE_8, LCD_TWO_LINE, LCD_5_8, LCD_CURSOR_VISIBLE_NO_BLINKING, LCD_CURSOR_DIRECT};
-static GPIO_Config_t pinConfig = {OUT, PUSH_PULL, LOW_SPEED};
-static void LCD_delay(void);
-static void LCD_sendData(LCD_t* lcd, uint8_t data);
+LCD_Config_t defaultConfig = {LCD_MODE_8, LCD_TWO_LINE, LCD_5_8, LCD_CURSOR_VISIBLE_BLINKINIG, LCD_CURSOR_DIRECT};
+static GPIO_Config_t pinConfig = {GPIO_OUTPUT, GPIO_PUSH_PULL, GPIO_LOW_SPEED};
+static void LCD_voidDelay(void);
+static void LCD_voidSendData(LCD_t* lcd, u8 data);
 
-static void LCD_delay(void)
+static void LCD_voidDelay(void)
 {
-	for(uint32_t i=0; i<5*1080; i++);
+	for(u32 i=0; i<5*1080; i++);
 }
 
-static void LCD_sendData(LCD_t* lcd, uint8_t data)
+static void LCD_voidSendData(LCD_t* lcd, u8 data)
 {
-	uint8_t i;
+	u8 i;
 	for(i=0; i<8; i++){
 		GPIO_setPinValue(lcd->port, lcd->D[i], ((data & (1<<i))>>i));
 	}
 	GPIO_setPinValue(lcd->port, lcd->En, HIGH);
-	LCD_delay();
+	LCD_voidDelay();
 	GPIO_setPinValue(lcd->port, lcd->En, LOW);
-	LCD_delay();
+	LCD_voidDelay();
 }
 
-void LCD_init(LCD_t* lcd)
+void LCD_voidInit(LCD_t* lcd)
 {
-	LCD_initWithConfig(lcd, &defaultConfig);
+	LCD_voidInitWithConfig(lcd, &defaultConfig);
 }
 
-void LCD_initWithConfig(LCD_t* lcd, LCD_Config_t* config)
+void LCD_voidInitWithConfig(LCD_t* lcd, LCD_Config_t* config)
 {
-	uint8_t i, data;
+	u8 i, data;
 
 	// Initialize LCD pins
 	for(i=0; i<8; i++){
@@ -59,10 +59,10 @@ void LCD_initWithConfig(LCD_t* lcd, LCD_Config_t* config)
 		data |= (1<<3);
 	if(config->resolution != LCD_5_11)
 		data |= (1<<2);
-	LCD_sendData(lcd, data);
+	LCD_voidSendData(lcd, data);
 
 	// Send Second instruction
-	LCD_sendData(lcd, data);
+	LCD_voidSendData(lcd, data);
 
 	// Send third instruction
 	data = 0x0C;
@@ -73,32 +73,32 @@ void LCD_initWithConfig(LCD_t* lcd, LCD_Config_t* config)
 		data |= (1<<1);
 		data |= (1<<0);
 	}
-	LCD_sendData(lcd, data);
+	LCD_voidSendData(lcd, data);
 
 	// Send Fourth instruction (clear display)
-	LCD_sendData(lcd, 0x01);
-	LCD_delay();
+	LCD_voidSendData(lcd, 0x01);
+	LCD_voidDelay();
 
 	// Send Fifth instruction (Entry mode set)
 	data = 0x04;
 	if(config->direction != LCD_CURSOR_DIRECT)
 		data |= (1<<1);
-	LCD_sendData(lcd, 0x01);
+	LCD_voidSendData(lcd, 0x01);
 
 }
 
-void LCD_dataWrite(LCD_t* lcd, uint8_t data)
+void LCD_voidDataWrite(LCD_t* lcd, u8 data)
 {
 	GPIO_setPinValue(lcd->port, lcd->RS, LCD_REG_DATA);
 	GPIO_setPinValue(lcd->port, lcd->RW, LCD_WRITE);
 
-	LCD_sendData(lcd, data);
+	LCD_voidSendData(lcd, data);
 }
 
-void LCD_commandWrite(LCD_t* lcd, uint8_t cmd)
+void LCD_voidCommandWrite(LCD_t* lcd, u8 cmd)
 {
 	GPIO_setPinValue(lcd->port, lcd->RS, LCD_REG_COMMAND);
 	GPIO_setPinValue(lcd->port, lcd->RW, LCD_WRITE);
 
-	LCD_sendData(lcd, cmd);
+	LCD_voidSendData(lcd, cmd);
 }

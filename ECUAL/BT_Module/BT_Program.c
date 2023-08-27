@@ -5,9 +5,9 @@
  *      Author: Mahmoud Ahmed Ibrahim
  */
 
-#include "BT.h"
+#include "BT_Interface.h"
 
-void BT_init(BT_t* bt){
+void BT_voidInit(BT_t* bt){
 	USART_Config_t BM;
 	BM.dataSize = _8_BIT;
 	BM.mode = ASYNCHRONOUS;
@@ -20,14 +20,12 @@ void BT_init(BT_t* bt){
 	USART_init(bt->USARTn, &BM);
 }
 
-void BT_sendData(BT_t* bt, uint8_t* buffer, uint32_t len){
-	for(uint32_t i=0; i<len; i++){
+void BT_voidSendData(BT_t* bt, u8* buffer, u32 len){
+	for(u32 i=0; i<len; i++)
 		USART_sendData(bt->USARTn, buffer[i]);
-	}
 }
 
-void BT_receiveData(BT_t* bt, uint8_t* buffer, uint32_t len){
-	for(uint32_t i=0; i<len; i++){
+void BT_voidReceiveData(BT_t* bt, u8* buffer, u32 len){
+	for(u32 i=0; i<len; i++)
 		USART_receiveData(bt->USARTn, &buffer[i]);
-	}
 }

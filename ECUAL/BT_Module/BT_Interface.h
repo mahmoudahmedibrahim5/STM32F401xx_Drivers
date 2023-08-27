@@ -8,16 +8,16 @@
 #ifndef BT_MODULE_BT_H_
 #define BT_MODULE_BT_H_
 
-#include "../../Utilities/stm32f401xx.h"
+#include "../../Utilities/DataTypes.h"
 #include "../../MCAL/USART/USART_Interface.h"
 
 typedef struct{
 	st_USART_RegDef_t* USARTn;
-	uint32_t baudrate;
+	u32 baudrate;
 }BT_t;
 
-void BT_init(BT_t* bt);
-void BT_sendData(BT_t* bt, uint8_t* buffer, uint32_t len);
-void BT_receiveData(BT_t* bt, uint8_t* buffer, uint32_t len);
+void BT_voidInit(BT_t* bt);
+void BT_voidSendData(BT_t* bt, u8* buffer, u32 len);
+void BT_voidReceiveData(BT_t* bt, u8* buffer, u32 len);
 
 #endif /* BT_MODULE_BT_H_ */

@@ -8,8 +8,6 @@
 #ifndef INA219_INA219_CONFIG_H_
 #define INA219_INA219_CONFIG_H_
 
-#include "../MCAL/I2C/I2C_Interface.h"
-
 /*********** INA219 Address *************
  * Check Table 1 page 14 in the datasheet
  * There are many addresses depends on A0 and A1 connections
@@ -18,7 +16,7 @@
 
 typedef struct{
 	st_I2C_RegDef_t* I2Cn;
-	uint8_t slaveAddress;
+	u8 slaveAddress;
 }INA219_t;
 
 #define INA219_SHUNT_RESISTANCE		100	// mΩ

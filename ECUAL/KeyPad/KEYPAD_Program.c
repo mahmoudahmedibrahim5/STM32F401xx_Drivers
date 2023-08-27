@@ -5,13 +5,13 @@
  *      Author: Mahmoud Ahmed Ibrahim
  */
 
-#include "KEYPAD.h"
+#include "KEYPAD_Interface.h"
 
-uint8_t key[17] = {NO_KEY_PRESSED,1,2,3,'A',4,5,6,'B',7,8,9,'C','*',0,'#','D'};
-GPIO_Config_t KP_IN_config = {IN, 0, LOW_SPEED, PULL_UP, 0};
-GPIO_Config_t KP_OUT_config = {OUT, PUSH_PULL, LOW_SPEED, NO_PUPD, 0};
+u8 key[17] = {NO_KEY_PRESSED,1,2,3,'A',4,5,6,'B',7,8,9,'C','*',0,'#','D'};
+GPIO_Config_t KP_IN_config = {GPIO_INPUT, 0, GPIO_LOW_SPEED, GPIO_PULL_UP, 0};
+GPIO_Config_t KP_OUT_config = {GPIO_OUTPUT, GPIO_PUSH_PULL, GPIO_LOW_SPEED, GPIO_NO_PUPD, 0};
 
-uint8_t KEYPAD_read(KeyPad_t* KeyPad)
+u8 KEYPAD_u8Read(KeyPad_t* KeyPad)
 {
 	/*
 	 * row and column are two variables to identify which key is pressed
@@ -19,7 +19,7 @@ uint8_t KEYPAD_read(KeyPad_t* KeyPad)
 	 * If no keys are pressed then (((row-1)*4)+column) will be equal zero
 	 * So the function will return value of NO_KEY_PRESSED
 	 */
-	uint8_t row = 1, column = 0;
+	u8 row = 1, column = 0;
 
 	// To read the row
 	GPIO_initPin(KeyPad->port, KeyPad->pins[0], &KP_IN_config);

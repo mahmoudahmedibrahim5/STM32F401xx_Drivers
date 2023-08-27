@@ -12,23 +12,23 @@
 #ifndef BUTTON_BUTTON_H_
 #define BUTTON_BUTTON_H_
 
-#include "../../Utilities/stm32f401xx.h"
+#include "../../Utilities/DataTypes.h"
 #include "../../MCAL/GPIO/GPIO_Interface.h"
 #include "../../MCAL/NVIC/NVIC_Interface.h"
 #include "../../MCAL/EXTI/EXTI_Interface.h"
 
 typedef struct Button{
-	uint8_t port;
-	uint8_t pin;
+	u8 port;
+	u8 pin;
 }Button_t;
 
-void Button_init(Button_t* btn);
-uint8_t Button_read(Button_t* btn);
+void Button_voidInit(Button_t* btn);
+u8 Button_u8Read(Button_t* btn);
 
 /* If you use interrupt,
  * you should call EXTI_clearFlag(lineNum) at the ISR
  * It Clear the interrupt flag, line Number = pin Number
  * */
-void Button_setInterrupt(Button_t* btn, uint8_t triggerType);
+void Button_voidSetInterrupt(Button_t* btn, u8 triggerType, void (*ptr)(void));
 
 #endif /* BUTTON_BUTTON_H_ */
