@@ -12,20 +12,20 @@ void Button_voidInit(Button_t* btn){
 	Button_config.mode = GPIO_INPUT;
 	Button_config.speed = GPIO_LOW_SPEED;
 	Button_config.pupdState = GPIO_PULL_UP;
-	GPIO_initPin(btn->port, btn->pin, &Button_config);
+	GPIO_voidInitPin(btn->port, btn->pin, &Button_config);
 }
 
 u8 Button_u8Read(Button_t* btn){
-	return GPIO_readPin(btn->port, btn->pin);
+	return GPIO_u8ReadPin(btn->port, btn->pin);
 }
 
 void Button_voidSetInterrupt(Button_t* btn, u8 triggerType, void (*ptr)(void)){
 	if(btn->pin < 5)
-		NVIC_enableIRQ(btn->pin + NVIC_IRQ_EXTI0);
+		NVIC_voidEnableIRQ(btn->pin + NVIC_IRQ_EXTI0);
 	else if(btn->pin < 10)
-		NVIC_enableIRQ(NVIC_IRQ_EXTI9_5);
+		NVIC_voidEnableIRQ(NVIC_IRQ_EXTI9_5);
 	else if(btn->pin < 16)
-		NVIC_enableIRQ(NVIC_IRQ_EXTI15_10);
+		NVIC_voidEnableIRQ(NVIC_IRQ_EXTI15_10);
 
 	EXTI_Config_t button = {btn->port, btn->pin, triggerType};
 	EXTI_voidHardwareInterruptEnable(&button);

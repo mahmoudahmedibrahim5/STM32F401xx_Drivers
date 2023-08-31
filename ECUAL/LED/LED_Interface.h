@@ -24,6 +24,6 @@ void LED_voidInit(LED_t* led);
 void LED_voidTurnON(LED_t* led);
 void LED_voidTurnOFF(LED_t* led);
 void LED_voidToggle(LED_t* led);
-u8 LED_voidRead(LED_t* led);
+u8 LED_u8Read(LED_t* led);
 
 #endif /* LED_LED_H_ */

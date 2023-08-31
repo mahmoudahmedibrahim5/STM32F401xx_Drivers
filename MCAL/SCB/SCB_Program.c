@@ -10,5 +10,5 @@
 
 void SCB_voidInterruptPriorityConfig(void)
 {
-	SCB->AIRCR = 0x05FA0000 | ((uint32_t)(SCB_PRIGROUP<<8));
+	SCB->AIRCR = 0x05FA0000 | ((u32)(SCB_PRIGROUP<<8));
 }

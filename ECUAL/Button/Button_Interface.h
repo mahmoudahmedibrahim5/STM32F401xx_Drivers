@@ -12,9 +12,9 @@
 #ifndef BUTTON_BUTTON_H_
 #define BUTTON_BUTTON_H_
 
-#include "../../Utilities/DataTypes.h"
 #include "../../MCAL/GPIO/GPIO_Interface.h"
 #include "../../MCAL/NVIC/NVIC_Interface.h"
+#include "../../MCAL/SYSCFG/SYSCFG_Interface.h"
 #include "../../MCAL/EXTI/EXTI_Interface.h"
 
 typedef struct Button{

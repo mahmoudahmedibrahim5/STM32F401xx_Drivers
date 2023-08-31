@@ -13,21 +13,21 @@ void LED_voidInit(LED_t* led){
 	LED_config.outType = GPIO_PUSH_PULL;
 	LED_config.speed = GPIO_LOW_SPEED;
 	LED_config.pupdState = GPIO_NO_PUPD;
-	GPIO_initPin(led->port, led->pin, &LED_config);
+	GPIO_voidInitPin(led->port, led->pin, &LED_config);
 }
 
 void LED_voidTurnON(LED_t* led){
-	GPIO_setPinValue(led->port, led->pin, HIGH);
+	GPIO_voidSetPinValue(led->port, led->pin, GPIO_HIGH);
 }
 
 void LED_voidTurnOFF(LED_t* led){
-	GPIO_setPinValue(led->port, led->pin, LOW);
+	GPIO_voidSetPinValue(led->port, led->pin, GPIO_LOW);
 }
 
 void LED_voidToggle(LED_t* led){
-	GPIO_togglePin(led->port, led->pin);
+	GPIO_voidTogglePin(led->port, led->pin);
 }
 
-uint8_t LED_voidRead(LED_t* led){
-	return GPIO_readPin(led->port, led->pin);
+u8 LED_u8Read(LED_t* led){
+	return GPIO_u8ReadPin(led->port, led->pin);
 }

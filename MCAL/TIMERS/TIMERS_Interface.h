@@ -8,7 +8,7 @@
 #ifndef TIMERS_TIMERS_INTERFACE_H_
 #define TIMERS_TIMERS_INTERFACE_H_
 
-#include "../RCC/RCC_Interface.h"
+#include "../../Utilities/STD_TYPES.h"
 #include "../GPIO/GPIO_Interface.h"
 #include "TIMERS_Registers.h"
 #include "TIMERS_Config.h"
@@ -30,7 +30,5 @@ void TIMERS_voidDelayMilliSec(u32 ms);
 
 void TIMERS_voidInitPWM(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t channel, f32 dutyCycle, u32 period);
 void TIMERS_voidUpdateDutyCycle(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t channel, f32 dutyCycle);
-
-void TIMERS_voidConfigurePWMPins(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t channel);
 
 #endif /* TIMERS_TIMERS_INTERFACE_H_ */

@@ -14,15 +14,15 @@
 
 void SYSTICK_voidInit(void);
 
-void SYSTICK_voidDelayMilliSec(uint32_t ms);
-void SYSTICK_voidDelayMicroSec(uint32_t us);
+void SYSTICK_voidDelayMilliSec(u32 ms);
+void SYSTICK_voidDelayMicroSec(u32 us);
 
-uint32_t SYSTICK_u32GetElapsedTime(void);
-uint32_t SYSTICK_u32GetRemainingTime(void);
+u32 SYSTICK_u32GetElapsedTime(void);
+u32 SYSTICK_u32GetRemainingTime(void);
 
 void SYSTICK_voidEnableInterrupt(void);
-void SYSTICK_voidStartCountMilliSeconds(uint32_t ms, void(*ptr)(void));
-void SYSTICK_voidStartCountMicroSeconds(uint32_t us, void(*ptr)(void));
+void SYSTICK_voidStartCountMilliSeconds(u32 ms, void(*ptr)(void));
+void SYSTICK_voidStartCountMicroSeconds(u32 us, void(*ptr)(void));
 
 void SYSTICK_voidSetCallBackFunction( void(*ptr)(void) );
 

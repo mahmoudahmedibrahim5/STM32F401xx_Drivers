@@ -8,7 +8,7 @@
 #ifndef SPI_SPI_INTERFACE_H_
 #define SPI_SPI_INTERFACE_H_
 
-#include "../../Utilities/DataTypes.h"
+#include "../../Utilities/STD_TYPES.h"
 #include "../GPIO/GPIO_Interface.h"
 #include "SPI_Registers.h"
 #include "SPI_Config.h"

@@ -7,16 +7,11 @@
 
 #include "TIMERS_Interface.h"
 
+static void TIMERS_voidConfigurePWMPins(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t channel);
+
 void TIMERS_voidInit(st_TIM_RegDef_t* TIMx)
 {
-	if(TIMx == TIM2)
-		RCC_peripheralEn(TIM2_EN);
-	else if(TIMx == TIM3)
-		RCC_peripheralEn(TIM3_EN);
-	else if(TIMx == TIM4)
-		RCC_peripheralEn(TIM4_EN);
-	else if(TIMx == TIM5)
-		RCC_peripheralEn(TIM5_EN);
+
 }
 
 void TIMERS_voidStopTimer(st_TIM_RegDef_t* TIMx)
@@ -41,7 +36,7 @@ void TIMERS_voidDelaySec(u32 s)
 	// Start Timer
 	TIMERS_DELAY_TIMER->CR1 |= (1<<TIMERS_BIT_CEN);
 
-	for(uint32_t i=0; i<s; i++){
+	for(u32 i=0; i<s; i++){
 		while(!(TIMERS_DELAY_TIMER->SR & (1<<0)));
 		// Clear The Update Flag
 		TIMERS_DELAY_TIMER->SR &= ~(1<<0);
@@ -68,7 +63,7 @@ void TIMERS_voidDelayMilliSec(u32 ms)
 	// Start The Timer
 	TIMERS_DELAY_TIMER->CR1 |= (1<<TIMERS_BIT_CEN);
 
-	for(uint32_t i=0; i<ms; i++){
+	for(u32 i=0; i<ms; i++){
 		while(!(TIMERS_DELAY_TIMER->SR & (1<<0)));
 		// Clear The Update Flag
 		TIMERS_DELAY_TIMER->SR &= ~(1<<0);
@@ -227,7 +222,7 @@ void TIMERS_voidUpdateDutyCycle(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t chann
 	}
 }
 
-void TIMERS_voidConfigurePWMPins(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t channel)
+static void TIMERS_voidConfigurePWMPins(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t channel)
 {
 	GPIO_Config_t pwm;
 	pwm.mode = GPIO_ALT_FN;
@@ -241,24 +236,24 @@ void TIMERS_voidConfigurePWMPins(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t chan
 		switch(channel)
 		{
 		case TIMERS_CHANNEL1:
-			GPIO_initPin(PORTA, TIMERS_TIM2_CH1_PIN, &pwm);
+			GPIO_voidInitPin(PORTA, TIMERS_TIM2_CH1_PIN, &pwm);
 			break;
 		case TIMERS_CHANNEL2:
 			#if (TIMERS_TIM2_CH2_PIN == 1)
-				GPIO_initPin(PORTA, TIMERS_TIM2_CH2_PIN, &pwm);
+				GPIO_voidInitPin(PORTA, TIMERS_TIM2_CH2_PIN, &pwm);
 			#elif(TIMERS_TIM2_CH2_PIN == 3)
-				GPIO_initPin(PORTB, TIMERS_TIM2_CH2_PIN, &pwm);
+				GPIO_voidInitPin(PORTB, TIMERS_TIM2_CH2_PIN, &pwm);
 			#endif
 			break;
 		case TIMERS_CHANNEL3:
 			#if (TIMERS_TIM2_CH3_PIN == 2)
-				GPIO_initPin(PORTA, TIMERS_TIM2_CH3_PIN, &pwm);
+				GPIO_voidInitPin(PORTA, TIMERS_TIM2_CH3_PIN, &pwm);
 			#elif(TIMERS_TIM2_CH3_PIN == 10)
-				GPIO_initPin(PORTB, TIMERS_TIM2_CH3_PIN, &pwm);
+				GPIO_voidInitPin(PORTB, TIMERS_TIM2_CH3_PIN, &pwm);
 			#endif
 			break;
 		case TIMERS_CHANNEL4:
-			GPIO_initPin(PORTA, TIMERS_TIM2_CH4_PIN, &pwm);
+			GPIO_voidInitPin(PORTA, TIMERS_TIM2_CH4_PIN, &pwm);
 			break;
 		}
 	}
@@ -269,24 +264,24 @@ void TIMERS_voidConfigurePWMPins(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t chan
 		{
 		case TIMERS_CHANNEL1:
 			#if (TIMERS_TIM3_CH1_PIN == 6)
-				GPIO_initPin(PORTA, TIMERS_TIM3_CH1_PIN, &pwm);
+				GPIO_voidInitPin(PORTA, TIMERS_TIM3_CH1_PIN, &pwm);
 			#elif(TIMERS_TIM3_CH1_PIN == 4)
-				GPIO_initPin(PORTB, TIMERS_TIM3_CH1_PIN, &pwm);
+				GPIO_voidInitPin(PORTB, TIMERS_TIM3_CH1_PIN, &pwm);
 			#endif
 
 			break;
 		case TIMERS_CHANNEL2:
 			#if (TIMERS_TIM3_CH2_PIN == 7)
-				GPIO_initPin(PORTA, TIMERS_TIM3_CH2_PIN, &pwm);
+				GPIO_voidInitPin(PORTA, TIMERS_TIM3_CH2_PIN, &pwm);
 			#elif(TIMERS_TIM3_CH2_PIN == 5)
-				GPIO_initPin(PORTB, TIMERS_TIM3_CH2_PIN, &pwm);
+				GPIO_voidInitPin(PORTB, TIMERS_TIM3_CH2_PIN, &pwm);
 			#endif
 			break;
 		case TIMERS_CHANNEL3:
-			GPIO_initPin(PORTB, TIMERS_TIM3_CH3_PIN, &pwm);
+			GPIO_voidInitPin(PORTB, TIMERS_TIM3_CH3_PIN, &pwm);
 			break;
 		case TIMERS_CHANNEL4:
-			GPIO_initPin(PORTB, TIMERS_TIM3_CH4_PIN, &pwm);
+			GPIO_voidInitPin(PORTB, TIMERS_TIM3_CH4_PIN, &pwm);
 			break;
 		}
 	}
@@ -296,16 +291,16 @@ void TIMERS_voidConfigurePWMPins(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t chan
 		switch(channel)
 		{
 		case TIMERS_CHANNEL1:
-			GPIO_initPin(PORTB, TIMERS_TIM4_CH3_PIN, &pwm);
+			GPIO_voidInitPin(PORTB, TIMERS_TIM4_CH3_PIN, &pwm);
 			break;
 		case TIMERS_CHANNEL2:
-			GPIO_initPin(PORTB, TIMERS_TIM4_CH2_PIN, &pwm);
+			GPIO_voidInitPin(PORTB, TIMERS_TIM4_CH2_PIN, &pwm);
 			break;
 		case TIMERS_CHANNEL3:
-			GPIO_initPin(PORTB, TIMERS_TIM4_CH3_PIN, &pwm);
+			GPIO_voidInitPin(PORTB, TIMERS_TIM4_CH3_PIN, &pwm);
 			break;
 		case TIMERS_CHANNEL4:
-			GPIO_initPin(PORTB, TIMERS_TIM4_CH4_PIN, &pwm);
+			GPIO_voidInitPin(PORTB, TIMERS_TIM4_CH4_PIN, &pwm);
 			break;
 		}
 	}
@@ -315,16 +310,16 @@ void TIMERS_voidConfigurePWMPins(st_TIM_RegDef_t* TIMx, EN_Timers_channel_t chan
 		switch(channel)
 		{
 		case TIMERS_CHANNEL1:
-			GPIO_initPin(PORTA, TIMERS_TIM5_CH3_PIN, &pwm);
+			GPIO_voidInitPin(PORTA, TIMERS_TIM5_CH3_PIN, &pwm);
 			break;
 		case TIMERS_CHANNEL2:
-			GPIO_initPin(PORTA, TIMERS_TIM5_CH2_PIN, &pwm);
+			GPIO_voidInitPin(PORTA, TIMERS_TIM5_CH2_PIN, &pwm);
 			break;
 		case TIMERS_CHANNEL3:
-			GPIO_initPin(PORTA, TIMERS_TIM5_CH3_PIN, &pwm);
+			GPIO_voidInitPin(PORTA, TIMERS_TIM5_CH3_PIN, &pwm);
 			break;
 		case TIMERS_CHANNEL4:
-			GPIO_initPin(PORTA, TIMERS_TIM5_CH4_PIN, &pwm);
+			GPIO_voidInitPin(PORTA, TIMERS_TIM5_CH4_PIN, &pwm);
 			break;
 		}
 	}

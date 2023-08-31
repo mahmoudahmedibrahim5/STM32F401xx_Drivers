@@ -97,12 +97,19 @@ void SPI_voidReceiveData(st_SPI_RegDef_t* SPIn, u8* data){
 void SPI_voidBiderctionalUpdate(st_SPI_RegDef_t* SPIn, SPI_Config_t* config)
 {
 	SPI_voidDisable(SPIn, config->duplex);
-
+	/*if(SPIn == SPI1)
+		RCC_peripheralDis(SPI1_EN);
+	else
+		RCC_peripheralDis(SPI2_EN);
 	if(config->duplex == SPI_HALF_DUPLEX_RX)
 		SPIn->CR1 |= (1<<14);
 	else
 		SPIn->CR1 &= ~(1<<14);
 
+	if(SPIn == SPI1)
+		RCC_peripheralEn(SPI1_EN);
+	else
+		RCC_peripheralEn(SPI2_EN);*/
 	SPI_voidEnable(SPIn);
 }
 
@@ -119,19 +126,19 @@ static void SPI_voidConfigurePins(st_SPI_RegDef_t* SPIn, SPI_Config_t* config)
 
 		if(config->duplex == SPI_FULL_DUPLEX){
 			if((config->slaveControl == SPI_SLAVE_CONTROL_HARDWARE))
-				GPIO_initPin(PORTA, 4, &spiConfig); // NSS
-			GPIO_initPin(PORTA, 5, &spiConfig); // SCK
-			GPIO_initPin(PORTA, 6, &spiConfig); // MISO
-			GPIO_initPin(PORTA, 7, &spiConfig); // MOSI
+				GPIO_voidInitPin(PORTA, 4, &spiConfig); // NSS
+			GPIO_voidInitPin(PORTA, 5, &spiConfig); // SCK
+			GPIO_voidInitPin(PORTA, 6, &spiConfig); // MISO
+			GPIO_voidInitPin(PORTA, 7, &spiConfig); // MOSI
 		}
 		else{// Half-Duplex
 			if(config->mode == SPI_MASTER){
-				GPIO_initPin(PORTA, 5, &spiConfig); // SCK
-				GPIO_initPin(PORTA, 7, &spiConfig); // MOSI
+				GPIO_voidInitPin(PORTA, 5, &spiConfig); // SCK
+				GPIO_voidInitPin(PORTA, 7, &spiConfig); // MOSI
 			}
 			else{
-				GPIO_initPin(PORTA, 5, &spiConfig); // SCK
-				GPIO_initPin(PORTA, 6, &spiConfig); // MISO
+				GPIO_voidInitPin(PORTA, 5, &spiConfig); // SCK
+				GPIO_voidInitPin(PORTA, 6, &spiConfig); // MISO
 			}
 		}
 	}
@@ -140,19 +147,19 @@ static void SPI_voidConfigurePins(st_SPI_RegDef_t* SPIn, SPI_Config_t* config)
 
 		if(config->duplex == SPI_FULL_DUPLEX){
 			if((config->slaveControl == SPI_SLAVE_CONTROL_HARDWARE))
-				GPIO_initPin(PORTB, 12, &spiConfig); // NSS
-			GPIO_initPin(PORTB, 13, &spiConfig); // SCK
-			GPIO_initPin(PORTB, 14, &spiConfig); // MISO
-			GPIO_initPin(PORTB, 15, &spiConfig); // MOSI
+				GPIO_voidInitPin(PORTB, 12, &spiConfig); // NSS
+			GPIO_voidInitPin(PORTB, 13, &spiConfig); // SCK
+			GPIO_voidInitPin(PORTB, 14, &spiConfig); // MISO
+			GPIO_voidInitPin(PORTB, 15, &spiConfig); // MOSI
 		}
 		else{// Half-Duplex
 			if(config->mode == SPI_MASTER){
-				GPIO_initPin(PORTB, 13, &spiConfig); // SCK
-				GPIO_initPin(PORTB, 15, &spiConfig); // MOSI
+				GPIO_voidInitPin(PORTB, 13, &spiConfig); // SCK
+				GPIO_voidInitPin(PORTB, 15, &spiConfig); // MOSI
 			}
 			else{
-				GPIO_initPin(PORTB, 13, &spiConfig); // SCK
-				GPIO_initPin(PORTB, 14, &spiConfig); // MISO
+				GPIO_voidInitPin(PORTB, 13, &spiConfig); // SCK
+				GPIO_voidInitPin(PORTB, 14, &spiConfig); // MISO
 			}
 		}
 	}
@@ -161,19 +168,19 @@ static void SPI_voidConfigurePins(st_SPI_RegDef_t* SPIn, SPI_Config_t* config)
 
 		if(config->duplex == SPI_FULL_DUPLEX){
 			if((config->slaveControl == SPI_SLAVE_CONTROL_HARDWARE))
-				GPIO_initPin(PORTA, 15, &spiConfig); // NSS
-			GPIO_initPin(PORTB, 3, &spiConfig);  // SCK
-			GPIO_initPin(PORTB, 4, &spiConfig);  // MISO
-			GPIO_initPin(PORTB, 5, &spiConfig);  // MOSI
+				GPIO_voidInitPin(PORTA, 15, &spiConfig); // NSS
+			GPIO_voidInitPin(PORTB, 3, &spiConfig);  // SCK
+			GPIO_voidInitPin(PORTB, 4, &spiConfig);  // MISO
+			GPIO_voidInitPin(PORTB, 5, &spiConfig);  // MOSI
 		}
 		else{// Half-Duplex
 			if(config->mode == SPI_MASTER){
-				GPIO_initPin(PORTB, 3, &spiConfig);  // SCK
-				GPIO_initPin(PORTB, 5, &spiConfig);  // MOSI
+				GPIO_voidInitPin(PORTB, 3, &spiConfig);  // SCK
+				GPIO_voidInitPin(PORTB, 5, &spiConfig);  // MOSI
 			}
 			else{
-				GPIO_initPin(PORTB, 3, &spiConfig);  // SCK
-				GPIO_initPin(PORTB, 4, &spiConfig);  // MISO
+				GPIO_voidInitPin(PORTB, 3, &spiConfig);  // SCK
+				GPIO_voidInitPin(PORTB, 4, &spiConfig);  // MISO
 			}
 		}
 	}

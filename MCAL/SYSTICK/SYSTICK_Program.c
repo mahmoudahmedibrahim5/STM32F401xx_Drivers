@@ -18,7 +18,7 @@ void SYSTICK_voidInit(void)
 }
 
 /* Delay Functions */
-void SYSTICK_voidDelayMilliSec(uint32_t ms)
+void SYSTICK_voidDelayMilliSec(u32 ms)
 {
 #if (SYSTICK_CLOCK_SOURCE == SYSTICK_AHB_DIV1)
 	SYSTICK->LOAD = 16000*ms;
@@ -31,7 +31,7 @@ void SYSTICK_voidDelayMilliSec(uint32_t ms)
 	SYSTICK->CTRL &= ~(1<<0);
 }
 
-void SYSTICK_voidDelayMicroSec(uint32_t us)
+void SYSTICK_voidDelayMicroSec(u32 us)
 {
 #if (SYSTICK_CLOCK_SOURCE == SYSTICK_AHB_DIV1)
 	SYSTICK->LOAD = 16*us;
@@ -45,12 +45,12 @@ void SYSTICK_voidDelayMicroSec(uint32_t us)
 }
 
 /* Elapsed and remaining time */
-uint32_t SYSTICK_uint32_tGetElapsedTime(void)
+u32 SYSTICK_u32GetElapsedTime(void)
 {
 	return (SYSTICK->LOAD - SYSTICK->VAL);
 }
 
-uint32_t SYSTICK_uint32_tGetRemainingTime(void)
+u32 SYSTICK_u32GetRemainingTime(void)
 {
 	return SYSTICK->VAL;
 }
@@ -61,7 +61,7 @@ void SYSTICK_voidEnableInterrupt(void)
 	SYSTICK->CTRL |= (1<<1);
 }
 
-void SYSTICK_voidStartCountMilliSeconds(uint32_t ms, void(*ptr)(void))
+void SYSTICK_voidStartCountMilliSeconds(u32 ms, void(*ptr)(void))
 {
 	SYSTICK_voidEnableInterrupt();
 	SYSTICK_voidSetCallBackFunction(ptr);
@@ -74,7 +74,7 @@ void SYSTICK_voidStartCountMilliSeconds(uint32_t ms, void(*ptr)(void))
 	SYSTICK->CTRL |= (1<<0);
 }
 
-void SYSTICK_voidStartCountMicroSeconds(uint32_t us, void(*ptr)(void))
+void SYSTICK_voidStartCountMicroSeconds(u32 us, void(*ptr)(void))
 {
 	SYSTICK_voidEnableInterrupt();
 	SYSTICK_voidSetCallBackFunction(ptr);

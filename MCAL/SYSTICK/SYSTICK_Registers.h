@@ -11,10 +11,10 @@
 #define SYSTICK_BASE_ADDR	0xE000E010
 
 typedef volatile struct{
-	uint32_t CTRL;
-	uint32_t LOAD;
-	uint32_t VAL;
-	uint32_t CALIB;
+	u32 CTRL;
+	u32 LOAD;
+	u32 VAL;
+	u32 CALIB;
 }st_SYSTICK_RegDef_t;
 
 #define SYSTICK		((st_SYSTICK_RegDef_t *) SYSTICK_BASE_ADDR)

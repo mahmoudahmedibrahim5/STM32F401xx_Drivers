@@ -8,7 +8,6 @@
 #ifndef BT_MODULE_BT_H_
 #define BT_MODULE_BT_H_
 
-#include "../../Utilities/DataTypes.h"
 #include "../../MCAL/USART/USART_Interface.h"
 
 typedef struct{

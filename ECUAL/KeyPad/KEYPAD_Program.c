@@ -22,46 +22,46 @@ u8 KEYPAD_u8Read(KeyPad_t* KeyPad)
 	u8 row = 1, column = 0;
 
 	// To read the row
-	GPIO_initPin(KeyPad->port, KeyPad->pins[0], &KP_IN_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[1], &KP_IN_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[2], &KP_IN_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[3], &KP_IN_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[0], &KP_IN_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[1], &KP_IN_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[2], &KP_IN_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[3], &KP_IN_config);
 
-	GPIO_initPin(KeyPad->port, KeyPad->pins[4], &KP_OUT_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[5], &KP_OUT_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[6], &KP_OUT_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[7], &KP_OUT_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[4], &KP_OUT_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[5], &KP_OUT_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[6], &KP_OUT_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[7], &KP_OUT_config);
 
-	GPIO_setPinValue(KeyPad->port, KeyPad->pins[4], LOW);
-	GPIO_setPinValue(KeyPad->port, KeyPad->pins[5], LOW);
-	GPIO_setPinValue(KeyPad->port, KeyPad->pins[6], LOW);
-	GPIO_setPinValue(KeyPad->port, KeyPad->pins[7], LOW);
+	GPIO_voidSetPinValue(KeyPad->port, KeyPad->pins[4], GPIO_LOW);
+	GPIO_voidSetPinValue(KeyPad->port, KeyPad->pins[5], GPIO_LOW);
+	GPIO_voidSetPinValue(KeyPad->port, KeyPad->pins[6], GPIO_LOW);
+	GPIO_voidSetPinValue(KeyPad->port, KeyPad->pins[7], GPIO_LOW);
 
-	if(GPIO_readPin(KeyPad->port, KeyPad->pins[0]) == 0) row=1;
-	else if(GPIO_readPin(KeyPad->port, KeyPad->pins[1]) == 0) row=2;
-	else if(GPIO_readPin(KeyPad->port, KeyPad->pins[3]) == 0) row=4;
-	else if(GPIO_readPin(KeyPad->port, KeyPad->pins[2]) == 0) row=3;
+	if(GPIO_u8ReadPin(KeyPad->port, KeyPad->pins[0]) == 0) row=1;
+	else if(GPIO_u8ReadPin(KeyPad->port, KeyPad->pins[1]) == 0) row=2;
+	else if(GPIO_u8ReadPin(KeyPad->port, KeyPad->pins[3]) == 0) row=4;
+	else if(GPIO_u8ReadPin(KeyPad->port, KeyPad->pins[2]) == 0) row=3;
 
 	// To read column
-	GPIO_initPin(KeyPad->port, KeyPad->pins[4], &KP_IN_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[5], &KP_IN_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[6], &KP_IN_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[7], &KP_IN_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[4], &KP_IN_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[5], &KP_IN_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[6], &KP_IN_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[7], &KP_IN_config);
 
-	GPIO_initPin(KeyPad->port, KeyPad->pins[0], &KP_OUT_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[1], &KP_OUT_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[2], &KP_OUT_config);
-	GPIO_initPin(KeyPad->port, KeyPad->pins[3], &KP_OUT_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[0], &KP_OUT_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[1], &KP_OUT_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[2], &KP_OUT_config);
+	GPIO_voidInitPin(KeyPad->port, KeyPad->pins[3], &KP_OUT_config);
 
-	GPIO_setPinValue(KeyPad->port, KeyPad->pins[0], LOW);
-	GPIO_setPinValue(KeyPad->port, KeyPad->pins[1], LOW);
-	GPIO_setPinValue(KeyPad->port, KeyPad->pins[2], LOW);
-	GPIO_setPinValue(KeyPad->port, KeyPad->pins[3], LOW);
+	GPIO_voidSetPinValue(KeyPad->port, KeyPad->pins[0], GPIO_LOW);
+	GPIO_voidSetPinValue(KeyPad->port, KeyPad->pins[1], GPIO_LOW);
+	GPIO_voidSetPinValue(KeyPad->port, KeyPad->pins[2], GPIO_LOW);
+	GPIO_voidSetPinValue(KeyPad->port, KeyPad->pins[3], GPIO_LOW);
 
-	if(GPIO_readPin(KeyPad->port, KeyPad->pins[4]) == 0) column=1;
-	else if(GPIO_readPin(KeyPad->port, KeyPad->pins[5]) == 0) column=2;
-	else if(GPIO_readPin(KeyPad->port, KeyPad->pins[6]) == 0) column=3;
-	else if(GPIO_readPin(KeyPad->port, KeyPad->pins[7]) == 0) column=4;
+	if(GPIO_u8ReadPin(KeyPad->port, KeyPad->pins[4]) == 0) column=1;
+	else if(GPIO_u8ReadPin(KeyPad->port, KeyPad->pins[5]) == 0) column=2;
+	else if(GPIO_u8ReadPin(KeyPad->port, KeyPad->pins[6]) == 0) column=3;
+	else if(GPIO_u8ReadPin(KeyPad->port, KeyPad->pins[7]) == 0) column=4;
 
 	return key[((row-1)*4)+column];
 }

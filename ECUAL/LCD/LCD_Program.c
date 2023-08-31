@@ -21,11 +21,11 @@ static void LCD_voidSendData(LCD_t* lcd, u8 data)
 {
 	u8 i;
 	for(i=0; i<8; i++){
-		GPIO_setPinValue(lcd->port, lcd->D[i], ((data & (1<<i))>>i));
+		GPIO_voidSetPinValue(lcd->port, lcd->D[i], ((data & (1<<i))>>i));
 	}
-	GPIO_setPinValue(lcd->port, lcd->En, HIGH);
+	GPIO_voidSetPinValue(lcd->port, lcd->En, GPIO_HIGH);
 	LCD_voidDelay();
-	GPIO_setPinValue(lcd->port, lcd->En, LOW);
+	GPIO_voidSetPinValue(lcd->port, lcd->En, GPIO_LOW);
 	LCD_voidDelay();
 }
 
@@ -40,15 +40,15 @@ void LCD_voidInitWithConfig(LCD_t* lcd, LCD_Config_t* config)
 
 	// Initialize LCD pins
 	for(i=0; i<8; i++){
-		GPIO_initPin(lcd->port, lcd->D[i], &pinConfig);
+		GPIO_voidInitPin(lcd->port, lcd->D[i], &pinConfig);
 	}
-	GPIO_initPin(lcd->port, lcd->En, &pinConfig);
-	GPIO_initPin(lcd->port, lcd->RS, &pinConfig);
-	GPIO_initPin(lcd->port, lcd->RW, &pinConfig);
+	GPIO_voidInitPin(lcd->port, lcd->En, &pinConfig);
+	GPIO_voidInitPin(lcd->port, lcd->RS, &pinConfig);
+	GPIO_voidInitPin(lcd->port, lcd->RW, &pinConfig);
 
 	// Start Initializing
-	GPIO_setPinValue(lcd->port, lcd->RS, LCD_REG_COMMAND);
-	GPIO_setPinValue(lcd->port, lcd->RW, LCD_WRITE);
+	GPIO_voidSetPinValue(lcd->port, lcd->RS, LCD_REG_COMMAND);
+	GPIO_voidSetPinValue(lcd->port, lcd->RW, LCD_WRITE);
 
 
 	// Send first instruction
@@ -89,16 +89,16 @@ void LCD_voidInitWithConfig(LCD_t* lcd, LCD_Config_t* config)
 
 void LCD_voidDataWrite(LCD_t* lcd, u8 data)
 {
-	GPIO_setPinValue(lcd->port, lcd->RS, LCD_REG_DATA);
-	GPIO_setPinValue(lcd->port, lcd->RW, LCD_WRITE);
+	GPIO_voidSetPinValue(lcd->port, lcd->RS, LCD_REG_DATA);
+	GPIO_voidSetPinValue(lcd->port, lcd->RW, LCD_WRITE);
 
 	LCD_voidSendData(lcd, data);
 }
 
 void LCD_voidCommandWrite(LCD_t* lcd, u8 cmd)
 {
-	GPIO_setPinValue(lcd->port, lcd->RS, LCD_REG_COMMAND);
-	GPIO_setPinValue(lcd->port, lcd->RW, LCD_WRITE);
+	GPIO_voidSetPinValue(lcd->port, lcd->RS, LCD_REG_COMMAND);
+	GPIO_voidSetPinValue(lcd->port, lcd->RW, LCD_WRITE);
 
 	LCD_voidSendData(lcd, cmd);
 }

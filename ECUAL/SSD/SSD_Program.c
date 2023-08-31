@@ -14,7 +14,7 @@ void SSD_voidInit(SSD_t *SSD)
 {
 	for(u8 i=0; i<8; i++)
 	{
-		GPIO_initPin(SSD->port, SSD->pins[i], &SSD_config);
+		GPIO_voidInitPin(SSD->port, SSD->pins[i], &SSD_config);
 	}
 }
 
@@ -24,20 +24,20 @@ void SSD_voidSetNumber(SSD_t *SSD, u8 num)
 	{
 		for(u8 i=0; i<7; i++)
 		{
-			GPIO_setPinValue(SSD->port, SSD->pins[i],((SSD_Numbers[num]&(1<<i))>>i));
+			GPIO_voidSetPinValue(SSD->port, SSD->pins[i],((SSD_Numbers[num]&(1<<i))>>i));
 		}
 	}
 }
 
 void SSD_voidSetDecimalPoint(SSD_t *SSD, u8 value)
 {
-	GPIO_setPinValue(SSD->port, SSD->pins[7], value);
+	GPIO_voidSetPinValue(SSD->port, SSD->pins[7], value);
 }
 
 void SSD_voidTurnOFF(SSD_t *SSD)
 {
 	for(u8 i=0; i<8; i++)
 	{
-		GPIO_setPinValue(SSD->port, SSD->pins[i], LOW);
+		GPIO_voidSetPinValue(SSD->port, SSD->pins[i], GPIO_LOW);
 	}
 }
