@@ -8,7 +8,7 @@
 #ifndef SYSTICK_SYSTICK_INTERFACE_H_
 #define SYSTICK_SYSTICK_INTERFACE_H_
 
-#include "../../Utilities/DataTypes.h"
+#include "../../Utilities/STD_TYPES.h"
 #include "SYSTICK_Registers.h"
 #include "SYSTICK_Config.h"
 

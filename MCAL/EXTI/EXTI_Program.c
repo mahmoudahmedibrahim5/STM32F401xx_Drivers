@@ -9,10 +9,6 @@
 
 void EXTI_voidHardwareInterruptEnable(EXTI_Config_t *config)
 {
-	// Enable SYSCFG clock
-	RCC_peripheralEn(SYSCFG_EN);
-	// Choose certain line for certain port
-	SYSCFG_EXTIcontrol(config->port, config->lineNum);
 	// Enable Interrupt mask
 	EXTI->IMR |= (1<<(config->lineNum));
 
@@ -37,7 +33,6 @@ void EXTI_voidHardwareInterruptEnable(EXTI_Config_t *config)
 
 void EXTI_voidHardwareEventEnable(EXTI_Config_t *config)
 {
-	SYSCFG_EXTIcontrol(config->port, config->lineNum);
 	EXTI->EMR |= (1<<(config->lineNum));
 
 	// Choose the trigger mode

@@ -8,7 +8,7 @@
 
 #include "SCB_Interface.h"
 
-void SCB_interruptPriorityConfig(void)
+void SCB_voidInterruptPriorityConfig(void)
 {
 	SCB->AIRCR = 0x05FA0000 | ((uint32_t)(SCB_PRIGROUP<<8));
 }

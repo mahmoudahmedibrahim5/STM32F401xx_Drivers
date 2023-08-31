@@ -10,13 +10,13 @@
 
 #define SYSTICK_BASE_ADDR	0xE000E010
 
-typedef struct{
+typedef volatile struct{
 	uint32_t CTRL;
 	uint32_t LOAD;
 	uint32_t VAL;
 	uint32_t CALIB;
 }st_SYSTICK_RegDef_t;
 
-#define SYSTICK		((volatile st_SYSTICK_RegDef_t *) SYSTICK_BASE_ADDR)
+#define SYSTICK		((st_SYSTICK_RegDef_t *) SYSTICK_BASE_ADDR)
 
 #endif /* SYSTICK_SYSTICK_REGISTERS_H_ */

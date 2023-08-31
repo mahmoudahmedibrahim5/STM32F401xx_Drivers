@@ -8,11 +8,12 @@
 #ifndef GPIO_GPIO_INTERFACE_H_
 #define GPIO_GPIO_INTERFACE_H_
 
+#include "../../Utilities/STD_TYPES.h"
 #include "GPIO_Registers.h"
 #include "GPIO_Config.h"
 
-#define LOW  0
-#define HIGH 1
+#define GPIO_LOW  0
+#define GPIO_HIGH 1
 
 typedef enum{
 	PORTA,
@@ -21,17 +22,17 @@ typedef enum{
 	PORTD,
 	PORTE,
 	PORTH=7
-}En_Port_t;
+}EN_Port_t;
 
-void GPIO_initPort(En_Port_t port, GPIO_Config_t* mode);
-void GPIO_initPin(En_Port_t port, uint8_t pinNum, GPIO_Config_t* mode);
+void GPIO_voidInitPort(EN_Port_t port, GPIO_Config_t* mode);
+void GPIO_voidInitPin(EN_Port_t port, u8 pinNum, GPIO_Config_t* mode);
 
-void GPIO_setPinValue(En_Port_t port, uint8_t pinNum, uint8_t val);
-void GPIO_setPortValue(En_Port_t port, uint16_t val);
-void GPIO_togglePin(En_Port_t port, uint8_t pinNum);
-void GPIO_togglePort(En_Port_t port);
+void GPIO_voidSetPinValue(EN_Port_t port, u8 pinNum, u8 val);
+void GPIO_voidSetPortValue(EN_Port_t port, u16 val);
+void GPIO_voidTogglePin(EN_Port_t port, u8 pinNum);
+void GPIO_voidTogglePort(EN_Port_t port);
 
-uint8_t GPIO_readPin(En_Port_t port, uint8_t pinNum);
-uint16_t GPIO_readPort(En_Port_t port);
+u8 GPIO_u8ReadPin(EN_Port_t port, u8 pinNum);
+u16 GPIO_u8ReadPort(EN_Port_t port);
 
 #endif /* GPIO_GPIO_INTERFACE_H_ */

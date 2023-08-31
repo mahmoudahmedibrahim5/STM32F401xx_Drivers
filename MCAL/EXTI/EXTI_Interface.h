@@ -8,8 +8,7 @@
 #ifndef EXTI_EXTI_INTERFACE_H_
 #define EXTI_EXTI_INTERFACE_H_
 
-#include "../../Utilities/DataTypes.h"
-#include "../SYSCFG/SYSCFG_Interface.h"
+#include "../../Utilities/STD_TYPES.h"
 #include "EXTI_Registers.h"
 
 #define EXTI_RISING_EDGE  			0
@@ -17,7 +16,7 @@
 #define EXTI_ON_CHANGE			 	2
 
 typedef struct{
-	EN_Port_t port;
+	u8 port;
 	u8 lineNum;
 	u8 triggerType;
 }EXTI_Config_t;
