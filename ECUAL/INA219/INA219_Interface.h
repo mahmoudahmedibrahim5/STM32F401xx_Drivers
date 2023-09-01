@@ -8,7 +8,7 @@
 #ifndef INA219_INA219_INTERFACE_H_
 #define INA219_INA219_INTERFACE_H_
 
-#include "../MCAL/I2C/I2C_Interface.h"
+#include "../../MCAL/I2C/I2C_Interface.h"
 #include "INA219_Registers.h"
 #include "INA219_Config.h"
 
