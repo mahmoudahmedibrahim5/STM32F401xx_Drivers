@@ -13,9 +13,15 @@
 #include "INA219_Config.h"
 
 void INA219_voidInit(INA219_t* config);
+
+/* Return values are in milliVolt */
 s16 INA219_s16ReadShuntVoltage(INA219_t* config);
 u16 INA219_u16ReadBusVoltage(INA219_t* config);
+
+/* Return value is in microAmpere */
 s16 INA219_s16ReadCurrent(INA219_t* config);
+
+/* Return values is in milliWatt */
 u16 INA219_u16ReadPower(INA219_t* config);
 
 

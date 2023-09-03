@@ -11,22 +11,24 @@ I2C_Config_t INA219_I2C_config = {I2C_STANDARD, I2C_7_BIT, 100, 0x61, I2C_ACK_EN
 
 void INA219_voidInit(INA219_t* config)
 {
-	// Initialize I2C
+	/* Initialize I2C */
 	I2C_voidInit(config->I2Cn, &INA219_I2C_config);
 
-	// Adjust Configuration Register
+	/* Adjust Configuration Register */
 	// Working by default configuration for now
 
-	// Adjust Calibration Register
+	/* Adjust Calibration Register */
 	// Cal = 40 for MAX_CURRENT = 100 mA and Shunt Resistance = 330 Ω
 	// Cal = 4194 for MAX_CURRENT = 3.2 A and Shunt Resistance = 100 mΩ
 	// Cal = FFFF for maximum resolution MAX_CURRENT = 200 mA and LSB = 6.25 uA
 
+	// 0.04096 is constant in the calibration equation from datasheet
+	// 32768 is pow(2, 15)
 	// 1000*1000 because Shunt resistance is in mΩ and Max current is in mA
 	u16 calbReg = ((0.04096*1000*1000) * 32768)/(INA219_MAX_CURRENT*INA219_SHUNT_RESISTANCE);
 	u8 data[3] = {INA219_REG_CALIBRATION, (calbReg>>8), (calbReg & 0xFF)};
 
-	// Send the Address of Shunt Voltage Register
+	/* Send the Address of Shunt Voltage Register */
 	I2C_voidMasterSendData(config->I2Cn, config->slaveAddress, data, 3, I2C_RS_DISABLE);
 }
 
