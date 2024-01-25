@@ -1,5 +1,5 @@
 # STM32F401xx drivers
-## This repository contains drivers to help you use STM32F401xx microcontrollers
+### This repository contains drivers to help you use STM32F401xx microcontrollers
 
 </br>
 
