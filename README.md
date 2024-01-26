@@ -16,7 +16,7 @@
 * FMI
 
 
-## ECUAL ECU Abstraction layers
+## ECUAL ECU Abstraction layer
 ### This folder contains drivers that manage the external hardware connected to the microcontroller, Most of them are tested and working in full functionality, the tested ones are:
 * BT_Module (Bluetooth module)
 * Button (Push buttons or switches)
